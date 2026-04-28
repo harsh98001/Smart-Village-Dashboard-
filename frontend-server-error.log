@@ -1,0 +1,105 @@
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[2m11:40:58 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/villages?limit=120[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1193:18)
+    at afterConnectMultiple (node:net:1783:7)
+[2m11:40:58 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/villages?limit=120[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1193:18)
+    at afterConnectMultiple (node:net:1783:7)
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article.png[33m, use [36m/images/article.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/water.png[33m, use [36m/images/water.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/article2.png[33m, use [36m/images/article2.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/data.png[33m, use [36m/images/data.png[33m.[39m
+[33mFiles in the public directory are served at the root path.
+Instead of [36m/public/images/cartoon.png[33m, use [36m/images/cartoon.png[33m.[39m
+^C^C

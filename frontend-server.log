@@ -1,0 +1,4 @@
+
+> smart-village-dashboard@1.0.0 client
+> vite --config frontend/vite.config.js
+
