@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import apiClient from "../api/client";
-import { h } from "../utils/h";
 import { useData } from "../context/DataContext";
 import PageBanner from "../components/layout/PageBanner";
 import SearchToolbar from "../components/ui/SearchToolbar";
@@ -210,242 +209,196 @@ const SearchFilterPage = () => {
       normalizePlaceText(record.name) === normalizePlaceText(activeLocation.name) &&
       normalizePlaceText(record.state) === normalizePlaceText(activeLocation.state);
 
-    return h(
-      "button",
-      {
-        key: `${record.id || record.name}-${record.state}`,
-        type: "button",
-        className: `search-result-card${isActive ? " active" : ""}`,
-        onClick: () => setSelectedLocation(record)
-      },
-      [
-        h("div", { key: "top", className: "search-result-top" }, [
-          h("div", { key: "copy", className: "search-result-copy" }, [
-            h("strong", { key: "name" }, record.name),
-            h("span", { key: "state" }, record.state)
-          ]),
-          h(
-            "span",
-            { key: "type", className: "search-result-type-pill" },
-            record.type
-          )
-        ]),
-        h("p", { key: "description", className: "search-result-description" }, record.description),
-        h("div", { key: "chips", className: "search-result-meta" }, [
-          h(
-            "span",
-            { key: "source", className: "search-result-badge" },
-            record.sourceLabel
-          ),
-          h(
-            "span",
-            { key: "modules", className: "search-result-badge muted" },
-            linkedProfile ? "Governance modules linked" : "Location verified"
-          )
-        ])
-      ]
-    );
+    return <button key={`${record.id || record.name}-${record.state}`} type="button" className={`search-result-card${isActive ? " active" : ""}`} onClick={() => setSelectedLocation(record)}>
+  <div key="top" className="search-result-top">
+    <div key="copy" className="search-result-copy">
+      <strong key="name">
+        {record.name}
+      </strong>
+      <span key="state">
+        {record.state}
+      </span>
+    </div>
+    <span key="type" className="search-result-type-pill">
+      {record.type}
+    </span>
+  </div>
+  <p key="description" className="search-result-description">
+    {record.description}
+  </p>
+  <div key="chips" className="search-result-meta">
+    <span key="source" className="search-result-badge">
+      {record.sourceLabel}
+    </span>
+    <span key="modules" className="search-result-badge muted">
+      {linkedProfile ? "Governance modules linked" : "Location verified"}
+    </span>
+  </div>
+</button>;
   };
 
-  return h("div", null, [
-    h(PageBanner, {
-      key: "banner",
-      chips: ["Real place search", "Smart governance modules", "Interactive maps"]
-    }),
-    h("section", { key: "body", className: "search-page-section" }, [
-      h("div", { key: "container", className: "container" }, [
-        h(SearchToolbar, {
-          key: "toolbar",
-          search,
-          filters,
-          states,
-          types,
-          onChange: (key, value) => {
-            if (key === "search") {
-              setSearch(value);
-              return;
-            }
+  return <div>
+  <PageBanner key="banner" chips={["Real place search", "Smart governance modules", "Interactive maps"]} />
+  <section key="body" className="search-page-section">
+    <div key="container" className="container">
+      <SearchToolbar key="toolbar" search={search} filters={filters} states={states} types={types} onChange={(key, value) => {
+                  if (key === "search") {
+                    setSearch(value);
+                    return;
+                  }
 
-            setFilters({ ...filters, [key]: value });
-          }
-        }),
-        h("div", { key: "status", className: "search-status-strip premium-card" }, [
-          h("div", { key: "copy", className: "search-status-copy" }, [
-            h("span", { key: "kicker", className: "search-status-kicker" }, "Keshar Intelligence Layer"),
-            h("strong", { key: "title" }, loading ? "Refreshing place intelligence..." : "Search intelligence"),
-            h(
-              "span",
-              { key: "text" },
-              `${meta.message} This panel now prioritises soil, water, sensors, classrooms, dairy, sanitation, and maps over raw geocoder trivia.`
-            )
-          ]),
-          h("div", { key: "chips", className: "page-banner-chips search-status-pills" }, [
-            h("span", { key: "states", className: "page-chip" }, `${states.length || 28} states covered`),
-            h("span", { key: "results", className: "page-chip" }, `${results.length} live matches`),
-            h(
-              "span",
-              { key: "source", className: "page-chip" },
-              meta.usedLiveResults ? "Live + official" : "Official directory"
-            )
-          ])
-        ]),
-        h("div", { key: "layout", className: "search-layout-grid" }, [
-          h("div", { key: "resultsPanel", className: "premium-card search-results-panel" }, [
-            h("div", { key: "head", className: "search-panel-header" }, [
-              h("div", { key: "copy", className: "search-panel-copy" }, [
-                h("span", { key: "eyebrow", className: "section-eyebrow" }, "Verified place results"),
-                h("h3", { key: "title", className: "table-title" }, "Choose a place to inspect")
-              ]),
-              h(
-                "span",
-                { key: "count", className: "search-panel-count" },
-                `${results.length} result${results.length === 1 ? "" : "s"}`
-              )
-            ]),
-            results.length
-              ? h(
-                  "div",
-                  { key: "grid", className: "search-result-grid" },
-                  results.map((record) => renderResultCard(record))
-                )
-              : h("div", { key: "empty", className: "search-empty-state" }, [
-                  h("strong", { key: "title" }, "No place matched that search."),
-                  h(
-                    "p",
-                    { key: "text" },
-                    "Try a state name, state capital, or city such as Patna, Mumbai, Varanasi, Bengaluru, or Mandi."
-                  )
-                ])
-          ]),
-          h("div", { key: "detailPanel", className: "premium-card search-detail-panel" }, [
-            activeLocation
-              ? h("div", { key: "detail", className: "search-detail-shell" }, [
-                  h("div", { key: "hero", className: "search-detail-hero" }, [
-                    h("div", { key: "copy", className: "search-detail-copy" }, [
-                      h("span", { key: "eyebrow", className: "section-eyebrow" }, "Selected place dashboard"),
-                      h("h3", { key: "title", className: "search-detail-title" }, activeLocation.name),
-                      h(
-                        "p",
-                        { key: "text", className: "search-detail-description" },
-                        activeProfile?.searchDashboardIntro
-                          ? activeProfile.searchDashboardIntro
-                          : activeProfile
-                            ? `This place is linked to the smart dashboard dataset for ${activeProfile.areaName}. The cards below now surface governance modules instead of raw geocoder details.`
-                            : "This place is verified through the India location directory. Governance cards below show linked live modules first and mark missing local feeds honestly."
-                      )
-                    ]),
-                    h("div", { key: "chips", className: "search-detail-chip-stack" }, [
-                      h("span", { key: "state", className: "page-chip" }, activeLocation.state),
-                      h("span", { key: "type", className: "page-chip" }, activeLocation.type),
-                      h(
-                        "span",
-                        { key: "source", className: "page-chip" },
-                        activeLocation.sourceLabel
-                      ),
-                      activeLocation.capital
-                        ? h(
-                            "span",
-                            { key: "capital", className: "page-chip" },
-                            `Capital: ${activeLocation.capital}`
-                          )
-                        : null
-                    ])
-                  ]),
-                  h("div", { key: "summary", className: "search-summary-strip" }, [
-                    h("div", { key: "soil", className: "search-summary-card soil" }, [
-                      h("span", { key: "label", className: "search-summary-label" }, "Soil"),
-                      h(
-                        "strong",
-                        { key: "value" },
-                        activeProfile?.soilIntelligenceValue ||
-                          activeProfile?.soilType ||
-                          "Awaiting local feed"
-                      )
-                    ]),
-                    h("div", { key: "water", className: "search-summary-card water" }, [
-                      h("span", { key: "label", className: "search-summary-label" }, "Water supply"),
-                      h(
-                        "strong",
-                        { key: "value" },
-                        activeProfile?.waterSupplyValue ||
-                          (activeProfile ? `${activeProfile.waterLevel}%` : "Feed pending")
-                      )
-                    ]),
-                    h("div", { key: "sensor", className: "search-summary-card sensors" }, [
-                      h("span", { key: "label", className: "search-summary-label" }, "Live sensors"),
-                      h(
-                        "strong",
-                        { key: "value" },
-                        activeProfile?.environmentalSensorsValue ||
-                          (environment.loading
-                            ? "Refreshing"
-                            : environment.aqi?.current?.us_aqi || environment.aqi?.current?.us_aqi === 0
-                              ? `AQI ${Math.round(environment.aqi.current.us_aqi)}`
-                              : environment.error || "Waiting for live feed")
-                      )
-                    ]),
-                    h("div", { key: "map", className: "search-summary-card map" }, [
-                      h("span", { key: "label", className: "search-summary-label" }, "Map view"),
-                      h(
-                        "a",
-                        {
-                          key: "link",
-                          className: "search-map-link",
-                          href:
-                            activeProfile?.interactiveMapsUrl ||
-                            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                              [activeLocation.name, activeLocation.state, "India"].filter(Boolean).join(", ")
-                            )}`,
-                          target: "_blank",
-                          rel: "noreferrer"
-                        },
-                        activeProfile?.interactiveMapsActionLabel || "Open"
-                      )
-                    ])
-                  ]),
-                  h(
-                    "div",
-                    { key: "modules", className: "search-module-grid" },
-                    modules.map((module) =>
-                      h("article", { key: module.key, className: `search-module-card tone-${module.tone}` }, [
-                        h("div", { key: "top", className: "search-module-top" }, [
-                          h("div", { key: "copy", className: "search-module-copy" }, [
-                            h("span", { key: "eyebrow", className: "search-module-source" }, module.source),
-                            h("strong", { key: "title" }, module.title)
-                          ]),
-                          h("span", { key: "value", className: "search-module-value" }, module.value)
-                        ]),
-                        h("p", { key: "description", className: "search-module-description" }, module.description),
-                        module.actionHref
-                          ? h(
-                              "a",
-                              {
-                                key: "action",
-                                className: "search-module-action",
-                                href: module.actionHref,
-                                target: "_blank",
-                                rel: "noreferrer"
-                              },
-                              module.actionLabel
-                            )
-                          : null
-                      ])
-                    )
-                  )
-                ])
-              : h("div", { key: "empty", className: "search-empty-state detail" }, [
-                  h("strong", { key: "title" }, "Search a place to open its dashboard view."),
-                  h(
-                    "p",
-                    { key: "text" },
-                    "The detail panel will show soil, water, sensors, smart dairy, digital classrooms, sanitation readiness, and map access."
-                  )
-                ])
-          ])
-        ])
-      ])
-    ])
-  ]);
+                  setFilters({ ...filters, [key]: value });
+                }} />
+      <div key="status" className="search-status-strip premium-card">
+        <div key="copy" className="search-status-copy">
+          <span key="kicker" className="search-status-kicker">Keshar Intelligence Layer</span>
+          <strong key="title">
+            {loading ? "Refreshing place intelligence..." : "Search intelligence"}
+          </strong>
+          <span key="text">
+            {`${meta.message} This panel now prioritises soil, water, sensors, classrooms, dairy, sanitation, and maps over raw geocoder trivia.`}
+          </span>
+        </div>
+        <div key="chips" className="page-banner-chips search-status-pills">
+          <span key="states" className="page-chip">
+            {`${states.length || 28} states covered`}
+          </span>
+          <span key="results" className="page-chip">
+            {`${results.length} live matches`}
+          </span>
+          <span key="source" className="page-chip">
+            {meta.usedLiveResults ? "Live + official" : "Official directory"}
+          </span>
+        </div>
+      </div>
+      <div key="layout" className="search-layout-grid">
+        <div key="resultsPanel" className="premium-card search-results-panel">
+          <div key="head" className="search-panel-header">
+            <div key="copy" className="search-panel-copy">
+              <span key="eyebrow" className="section-eyebrow">Verified place results</span>
+              <h3 key="title" className="table-title">Choose a place to inspect</h3>
+            </div>
+            <span key="count" className="search-panel-count">
+              {`${results.length} result${results.length === 1 ? "" : "s"}`}
+            </span>
+          </div>
+          {results.length
+                        ? <div key="grid" className="search-result-grid">
+            {results.map((record) => renderResultCard(record))}
+          </div>
+                        : <div key="empty" className="search-empty-state">
+            <strong key="title">No place matched that search.</strong>
+            <p key="text">Try a state name, state capital, or city such as Patna, Mumbai, Varanasi, Bengaluru, or Mandi.</p>
+          </div>}
+        </div>
+        <div key="detailPanel" className="premium-card search-detail-panel">
+          {activeLocation
+                        ? <div key="detail" className="search-detail-shell">
+            <div key="hero" className="search-detail-hero">
+              <div key="copy" className="search-detail-copy">
+                <span key="eyebrow" className="section-eyebrow">Selected place dashboard</span>
+                <h3 key="title" className="search-detail-title">
+                  {activeLocation.name}
+                </h3>
+                <p key="text" className="search-detail-description">
+                  {activeProfile?.searchDashboardIntro
+                                            ? activeProfile.searchDashboardIntro
+                                            : activeProfile
+                                              ? `This place is linked to the smart dashboard dataset for ${activeProfile.areaName}. The cards below now surface governance modules instead of raw geocoder details.`
+                                              : "This place is verified through the India location directory. Governance cards below show linked live modules first and mark missing local feeds honestly."}
+                </p>
+              </div>
+              <div key="chips" className="search-detail-chip-stack">
+                <span key="state" className="page-chip">
+                  {activeLocation.state}
+                </span>
+                <span key="type" className="page-chip">
+                  {activeLocation.type}
+                </span>
+                <span key="source" className="page-chip">
+                  {activeLocation.sourceLabel}
+                </span>
+                {activeLocation.capital
+                                        ? <span key="capital" className="page-chip">
+                  {`Capital: ${activeLocation.capital}`}
+                </span>
+                                        : null}
+              </div>
+            </div>
+            <div key="summary" className="search-summary-strip">
+              <div key="soil" className="search-summary-card soil">
+                <span key="label" className="search-summary-label">Soil</span>
+                <strong key="value">
+                  {activeProfile?.soilIntelligenceValue ||
+                                            activeProfile?.soilType ||
+                                            "Awaiting local feed"}
+                </strong>
+              </div>
+              <div key="water" className="search-summary-card water">
+                <span key="label" className="search-summary-label">Water supply</span>
+                <strong key="value">
+                  {activeProfile?.waterSupplyValue ||
+                                            (activeProfile ? `${activeProfile.waterLevel}%` : "Feed pending")}
+                </strong>
+              </div>
+              <div key="sensor" className="search-summary-card sensors">
+                <span key="label" className="search-summary-label">Live sensors</span>
+                <strong key="value">
+                  {activeProfile?.environmentalSensorsValue ||
+                                            (environment.loading
+                                              ? "Refreshing"
+                                              : environment.aqi?.current?.us_aqi || environment.aqi?.current?.us_aqi === 0
+                                                ? `AQI ${Math.round(environment.aqi.current.us_aqi)}`
+                                                : environment.error || "Waiting for live feed")}
+                </strong>
+              </div>
+              <div key="map" className="search-summary-card map">
+                <span key="label" className="search-summary-label">Map view</span>
+                <a key="link" className="search-map-link" href={activeProfile?.interactiveMapsUrl ||
+                                            `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                                              [activeLocation.name, activeLocation.state, "India"].filter(Boolean).join(", ")
+                                            )}`} target="_blank" rel="noreferrer">
+                  {activeProfile?.interactiveMapsActionLabel || "Open"}
+                </a>
+              </div>
+            </div>
+            <div key="modules" className="search-module-grid">
+              {modules.map((module) =>
+                                    <article key={module.key} className={`search-module-card tone-${module.tone}`}>
+                <div key="top" className="search-module-top">
+                  <div key="copy" className="search-module-copy">
+                    <span key="eyebrow" className="search-module-source">
+                      {module.source}
+                    </span>
+                    <strong key="title">
+                      {module.title}
+                    </strong>
+                  </div>
+                  <span key="value" className="search-module-value">
+                    {module.value}
+                  </span>
+                </div>
+                <p key="description" className="search-module-description">
+                  {module.description}
+                </p>
+                {module.actionHref
+                                          ? <a key="action" className="search-module-action" href={module.actionHref} target="_blank" rel="noreferrer">
+                  {module.actionLabel}
+                </a>
+                                          : null}
+              </article>
+                                  )}
+            </div>
+          </div>
+                        : <div key="empty" className="search-empty-state detail">
+            <strong key="title">Search a place to open its dashboard view.</strong>
+            <p key="text">The detail panel will show soil, water, sensors, smart dairy, digital classrooms, sanitation readiness, and map access.</p>
+          </div>}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>;
 };
 
 export default SearchFilterPage;

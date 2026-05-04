@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { h } from "../../utils/h";
 import { useData } from "../../context/DataContext";
 import usePageMeta from "../../hooks/usePageMeta";
 import { formatTime } from "../../utils/formatters";
@@ -110,114 +109,56 @@ const AssistantWidget = () => {
     }
   };
 
-  return h("div", { className: "assistant-widget" }, [
-    open
-      ? h("div", { key: "panel", className: "assistant-panel" }, [
-          h("div", { key: "header", className: "assistant-header" }, [
-            h("div", { key: "titleBlock", className: "assistant-header-copy" }, [
-              h("strong", { key: "title" }, "Smart AI Assistant"),
-              h("span", { key: "subtitle" }, pageMeta.title)
-            ]),
-            h(
-              "button",
-              {
-                key: "close",
-                type: "button",
-                className: "assistant-close",
-                onClick: () => setOpen(false)
-              },
-              "×"
-            )
-          ]),
-          h(
-            "div",
-            {
-              key: "messages",
-              className: "assistant-messages"
-            },
-            messages.map((message) =>
-              h(
-                "div",
-                {
-                  key: message.id,
-                  className: `assistant-message ${message.role}`
-                },
-                [
-                  h("p", { key: "text" }, message.text),
-                  h("span", { key: "time", className: "assistant-time" }, formatTime(message.time))
-                ]
-              )
-            ).concat(
-              loading
-                ? [
-                    h("div", { key: "typing", className: "assistant-message assistant typing" }, [
-                      h("p", { key: "dots" }, "Typing...")
-                    ])
-                  ]
-                : []
-            )
-          ),
-          h(
-            "div",
-            {
-              key: "chips",
-              className: "assistant-chips"
-            },
-            quickQuestions.map((question) =>
-              h(
-                "button",
-                {
-                  key: question,
-                  type: "button",
-                  className: "assistant-chip",
-                  onClick: () => submitQuestion(question)
-                },
-                question
-              )
-            )
-          ),
-          h(
-            "form",
-            {
-              key: "form",
-              className: "assistant-form",
-              onSubmit: (event) => {
-                event.preventDefault();
-                submitQuestion(input);
-              }
-            },
-            [
-              h("input", {
-                key: "input",
-                className: "form-control",
-                placeholder: "Ask about the current page or dashboard...",
-                value: input,
-                onChange: (event) => setInput(event.target.value)
-              }),
-              h(
-                "button",
-                {
-                  key: "send",
-                  type: "submit",
-                  className: "btn btn-smart-primary"
-                },
-                "Send"
-              )
-            ]
-          )
-        ])
-      : null,
-    h(
-      "button",
-      {
-        key: "trigger",
-        type: "button",
-        className: "assistant-trigger",
-        onClick: () => setOpen((currentState) => !currentState)
-      },
-      "🤖"
-    )
-  ]);
+  return <div className="assistant-widget">
+  {open
+        ? <div key="panel" className="assistant-panel">
+    <div key="header" className="assistant-header">
+      <div key="titleBlock" className="assistant-header-copy">
+        <strong key="title">Smart AI Assistant</strong>
+        <span key="subtitle">
+          {pageMeta.title}
+        </span>
+      </div>
+      <button key="close" type="button" className="assistant-close" onClick={() => setOpen(false)}>×</button>
+    </div>
+    <div key="messages" className="assistant-messages">
+      {messages.map((message) =>
+                    <div key={message.id} className={`assistant-message ${message.role}`}>
+        <p key="text">
+          {message.text}
+        </p>
+        <span key="time" className="assistant-time">
+          {formatTime(message.time)}
+        </span>
+      </div>
+                  ).concat(
+                    loading
+                      ? [
+                          <div key="typing" className="assistant-message assistant typing">
+        <p key="dots">Typing...</p>
+      </div>
+                        ]
+                      : []
+                  )}
+    </div>
+    <div key="chips" className="assistant-chips">
+      {quickQuestions.map((question) =>
+                    <button key={question} type="button" className="assistant-chip" onClick={() => submitQuestion(question)}>
+        {question}
+      </button>
+                  )}
+    </div>
+    <form key="form" className="assistant-form" onSubmit={(event) => {
+                    event.preventDefault();
+                    submitQuestion(input);
+                  }}>
+      <input key="input" className="form-control" placeholder="Ask about the current page or dashboard..." value={input} onChange={(event) => setInput(event.target.value)} />
+      <button key="send" type="submit" className="btn btn-smart-primary">Send</button>
+    </form>
+  </div>
+        : null}
+  <button key="trigger" type="button" className="assistant-trigger" onClick={() => setOpen((currentState) => !currentState)}>🤖</button>
+</div>;
 };
 
 export default AssistantWidget;

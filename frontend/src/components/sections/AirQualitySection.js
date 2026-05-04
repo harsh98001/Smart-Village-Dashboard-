@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { h } from "../../utils/h";
 import SectionTitle from "../ui/SectionTitle";
 import StatCard from "../ui/StatCard";
 import { formatTime } from "../../utils/formatters";
@@ -105,82 +104,62 @@ const AirQualitySection = ({
     };
   }, [readings]);
 
-  return h("section", { className: `air-quality-section ${compact ? "compact" : ""}`.trim() }, [
-    h("div", { key: "container", className: "container" }, [
-      h(SectionTitle, {
-        key: "title",
-        eyebrow,
-        title,
-        description
-      }),
-      h("div", { key: "summary", className: "stats-grid compact-grid" }, [
-        h(StatCard, {
-          key: "average",
-          icon: "🌫️",
-          title: "Average Live AQI",
-          value: summary.averageAqi,
-          description: "Average current AQI across the selected monitoring cities.",
-          formatter: (value) => value,
-          tone: "maroon"
-        }),
-        h(StatCard, {
-          key: "leader",
-          icon: "📍",
-          title: "Highest AQI City",
-          value: summary.highest?.current?.us_aqi || 0,
-          description: summary.highest ? summary.highest.label : "Awaiting live feed",
-          formatter: (value) => value,
-          tone: "orange"
-        })
-      ]),
-      h(
-        "div",
-        {
-          key: "grid",
-          className: "air-quality-grid"
-        },
-        readings.map((reading) => {
-          const aqi = reading.current?.us_aqi || 0;
-          const status = resolveAqiStatus(aqi);
+  return <section className={`air-quality-section ${compact ? "compact" : ""}`.trim()}>
+  <div key="container" className="container">
+    <SectionTitle key="title" eyebrow={eyebrow} title={title} description={description} />
+    <div key="summary" className="stats-grid compact-grid">
+      <StatCard key="average" icon="🌫️" title="Average Live AQI" value={summary.averageAqi} description="Average current AQI across the selected monitoring cities." formatter={(value) => value} tone="maroon" />
+      <StatCard key="leader" icon="📍" title="Highest AQI City" value={summary.highest?.current?.us_aqi || 0} description={summary.highest ? summary.highest.label : "Awaiting live feed"} formatter={(value) => value} tone="orange" />
+    </div>
+    <div key="grid" className="air-quality-grid">
+      {readings.map((reading) => {
+                const aqi = reading.current?.us_aqi || 0;
+                const status = resolveAqiStatus(aqi);
 
-          return h("article", { key: reading.id, className: `aqi-card tone-${status.tone}` }, [
-            h("div", { key: "top", className: "aqi-card-top" }, [
-              h("div", { key: "copy", className: "aqi-card-copy" }, [
-                h("strong", { key: "city" }, reading.label),
-                h("span", { key: "subtitle", className: "small-label" }, reading.subtitle)
-              ]),
-              h("span", { key: "status", className: `aqi-status aqi-${status.tone}` }, status.label)
-            ]),
-            h("div", { key: "score", className: "aqi-score" }, String(aqi)),
-            h("div", { key: "metrics", className: "aqi-metrics" }, [
-              h("span", { key: "pm25" }, `PM2.5 ${Math.round(reading.current?.pm2_5 || 0)}`),
-              h("span", { key: "pm10" }, `PM10 ${Math.round(reading.current?.pm10 || 0)}`),
-              h("span", { key: "o3" }, `Ozone ${Math.round(reading.current?.ozone || 0)}`),
-              h("span", { key: "no2" }, `NO₂ ${Math.round(reading.current?.nitrogen_dioxide || 0)}`)
-            ]),
-            h(
-              "div",
-              {
-                key: "footer",
-                className: "aqi-card-footer"
-              },
-              `Updated ${formatTime(reading.current?.time || new Date())}`
-            )
-          ]);
-        })
-      ),
-      h(
-        "p",
-        {
-          key: "note",
-          className: "air-quality-note"
-        },
-        loading
-          ? "Refreshing live AQI values..."
-          : error || "Live air quality powered by the Open-Meteo Air Quality API."
-      )
-    ])
-  ]);
+                return <article key={reading.id} className={`aqi-card tone-${status.tone}`}>
+        <div key="top" className="aqi-card-top">
+          <div key="copy" className="aqi-card-copy">
+            <strong key="city">
+              {reading.label}
+            </strong>
+            <span key="subtitle" className="small-label">
+              {reading.subtitle}
+            </span>
+          </div>
+          <span key="status" className={`aqi-status aqi-${status.tone}`}>
+            {status.label}
+          </span>
+        </div>
+        <div key="score" className="aqi-score">
+          {String(aqi)}
+        </div>
+        <div key="metrics" className="aqi-metrics">
+          <span key="pm25">
+            {`PM2.5 ${Math.round(reading.current?.pm2_5 || 0)}`}
+          </span>
+          <span key="pm10">
+            {`PM10 ${Math.round(reading.current?.pm10 || 0)}`}
+          </span>
+          <span key="o3">
+            {`Ozone ${Math.round(reading.current?.ozone || 0)}`}
+          </span>
+          <span key="no2">
+            {`NO₂ ${Math.round(reading.current?.nitrogen_dioxide || 0)}`}
+          </span>
+        </div>
+        <div key="footer" className="aqi-card-footer">
+          {`Updated ${formatTime(reading.current?.time || new Date())}`}
+        </div>
+      </article>;
+              })}
+    </div>
+    <p key="note" className="air-quality-note">
+      {loading
+                ? "Refreshing live AQI values..."
+                : error || "Live air quality powered by the Open-Meteo Air Quality API."}
+    </p>
+  </div>
+</section>;
 };
 
 export default AirQualitySection;

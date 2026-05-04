@@ -1,5 +1,4 @@
 import React from "react";
-import { h } from "../utils/h";
 import { useData } from "../context/DataContext";
 import PageBanner from "../components/layout/PageBanner";
 import StatCard from "../components/ui/StatCard";
@@ -104,18 +103,30 @@ const buildLightChartOptions = (overrides = {}) => ({
 });
 
 const renderGrowthSignal = (signal) =>
-  h("div", { key: signal.label, className: "command-signal-card growth-signal-card" }, [
-    h("span", { key: "label", className: "command-signal-label" }, signal.label),
-    h("strong", { key: "value", className: "command-signal-value" }, signal.value),
-    h("p", { key: "note", className: "command-signal-note" }, signal.note)
-  ]);
+  <div key={signal.label} className="command-signal-card growth-signal-card">
+  <span key="label" className="command-signal-label">
+    {signal.label}
+  </span>
+  <strong key="value" className="command-signal-value">
+    {signal.value}
+  </strong>
+  <p key="note" className="command-signal-note">
+    {signal.note}
+  </p>
+</div>;
 
 const renderVisualTile = (tile) =>
-  h("div", { key: tile.label, className: "visual-metric-tile" }, [
-    h("span", { key: "label", className: "visual-metric-label" }, tile.label),
-    h("strong", { key: "value", className: "visual-metric-value" }, tile.value),
-    h("span", { key: "note", className: "visual-metric-note" }, tile.note)
-  ]);
+  <div key={tile.label} className="visual-metric-tile">
+  <span key="label" className="visual-metric-label">
+    {tile.label}
+  </span>
+  <strong key="value" className="visual-metric-value">
+    {tile.value}
+  </strong>
+  <span key="note" className="visual-metric-note">
+    {tile.note}
+  </span>
+</div>;
 
 const GrowthPage = () => {
   const { villages, trends } = useData();
@@ -499,250 +510,123 @@ const GrowthPage = () => {
     options: buildLightChartOptions()
   };
 
-  return h("div", null, [
-    h(PageBanner, {
-      key: "banner",
-      chips: [
-        "Metro and airports",
-        "Startups and business models",
-        "Land and dams",
-        "Solar and e-education",
-        "Commerce and services",
-        "Live AQI"
-      ]
-    }),
-    h(InsightMarquee, {
-      key: "marquee",
-      eyebrow: "Growth Priorities",
-      items: growthMarqueeItems,
-      speed: "slow",
-      reverse: true
-    }),
-    h("section", { key: "body", className: "growth-page-section" }, [
-      h("div", { key: "container", className: "container" }, [
-        h("div", { key: "hero", className: "intelligence-command-board growth-command-board" }, [
-          h("div", { key: "copy", className: "command-copy growth-command-copy" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "Regional growth mission"),
-            h(
-              "h2",
-              { key: "title", className: "command-title growth-command-title" },
-              "Growth now reads like a future district mission board with metro, airport, dam, solar, startups, land, commerce, and disaster-management tracks"
-            ),
-            h(
-              "p",
-              { key: "description", className: "command-description growth-command-description" },
-              "This page now carries the future-facing side of the platform. It brings together transport, air-cargo, dam modernization, solar expansion, e-education, serviced land, startup zones, dairy networks, ecommerce delivery, and business models so the growth narrative feels large-scale and credible."
-            ),
-            h(
-              "div",
-              { key: "chips", className: "command-chip-row growth-chip-row" },
-              [
-                "Metro-lite mobility",
-                "Airport cargo",
-                "Dams and water security",
-                "Solar transition",
-                "Land bank",
-                "Startups and commerce"
-              ].map((chip) =>
-                h(
-                  "span",
-                  { key: chip, className: "command-chip growth-command-chip" },
-                  chip
-                )
-              )
-            ),
-            h(
-              "div",
-              { key: "signals", className: "command-signal-grid growth-signal-grid" },
-              growthHeroSignals.map(renderGrowthSignal)
-            )
-          ]),
-          h("div", { key: "visual", className: "command-visual-shell growth-visual-shell" }, [
-            h("div", { key: "frame", className: "command-visual-frame growth-visual-frame" }, [
-              h("img", {
-                key: "image",
-                src: "/images/growth-reference.jpg",
-                alt: "Growth mission reference board",
-                className: "command-reference-image"
-              }),
-              h("div", { key: "panel1", className: "command-overlay-card overlay-top growth-overlay-card" }, [
-                h("span", { key: "label", className: "command-overlay-label" }, "Growth cluster scope"),
-                h("strong", { key: "value", className: "command-overlay-value" }, "Metro + airport + logistics"),
-                h("p", { key: "text", className: "command-overlay-note" }, "Mobility, cargo, and service access stitched into one expansion frame")
-              ]),
-              h("div", { key: "panel2", className: "command-overlay-card overlay-bottom-left growth-overlay-card" }, [
-                h("span", { key: "label", className: "command-overlay-label" }, "Enterprise land bank"),
-                h("strong", { key: "value", className: "command-overlay-value" }, "1,460 acres tagged"),
-                h("p", { key: "text", className: "command-overlay-note" }, "Sites aligned for agro-processing, startups, tourism, and logistics")
-              ]),
-              h("div", { key: "panel3", className: "command-overlay-card overlay-bottom-right growth-overlay-card" }, [
-                h("span", { key: "label", className: "command-overlay-label" }, "Disaster management"),
-                h("strong", { key: "value", className: "command-overlay-value" }, "42 sensor points"),
-                h("p", { key: "text", className: "command-overlay-note" }, "Warning, relief, shelter, and flood routing now sit inside the growth layer")
-              ])
-            ])
-          ])
-        ]),
-        h(
-          "div",
-          { key: "stats", className: "stats-grid compact-grid intelligence-kpi-strip" },
-          growthSummaryCards.map((card) =>
-            h(StatCard, {
-              key: card.key,
-              icon: card.icon,
-              title: card.title,
-              value: card.value,
-              description: card.description,
-              formatter: card.formatter,
-              tone: card.tone
-            })
-          )
-        ),
-        h("div", { key: "charts", className: "intelligence-chart-grid" }, [
-          h(ChartCard, {
-            key: "timeline",
-            title: "Quarter-on-quarter development pattern",
-            subtitle: "Agriculture, electricity, and literacy remain visible in the future story",
-            config: timelineChartConfig
-          }),
-          h(ChartCard, {
-            key: "leaders",
-            title: "Top growth villages",
-            subtitle: "Growth index and infrastructure support by leading villages",
-            config: growthLeaderConfig
-          }),
-          h(ChartCard, {
-            key: "timelines",
-            title: "Program delivery timelines",
-            subtitle: "Enterprise, logistics, skills, dairy, tourism, and disaster missions",
-            config: programTimelineConfig
-          }),
-          h(ChartCard, {
-            key: "renewable",
-            title: "Renewable and e-education readiness",
-            subtitle: "Tracks whether future missions are backed by clean energy and classroom capacity",
-            config: renewableReadinessConfig
-          })
-        ]),
-        h("section", { key: "missionBoard", className: "growth-track-shell visual-graph-board" }, [
-          h("div", { key: "head", className: "intelligence-section-head" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "Upcoming growth programmes"),
-            h("h3", { key: "title", className: "table-title" }, "Metro, airports, dams, land, startups, solar, ecommerce, and business-model tracks"),
-            h(
-              "p",
-              { key: "desc", className: "command-muted" },
-              "This block now behaves like a graph dashboard instead of a stack of descriptive cards."
-            )
-          ]),
-          h("div", { key: "tiles", className: "visual-metric-row" }, missionTiles.map(renderVisualTile)),
-          h("div", { key: "graphs", className: "mini-graph-grid service-graph-grid" }, [
-            h(ChartCard, {
-              key: "missionScale",
-              title: "Mission scale",
-              subtitle: "Relative size of the future expansion tracks",
-              config: missionScaleConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            }),
-            h(ChartCard, {
-              key: "missionRadar",
-              title: "Mission readiness map",
-              subtitle: "Mobility, water, energy, skills, land, and enterprise radar",
-              config: missionRadarConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            }),
-            h(ChartCard, {
-              key: "missionBlend",
-              title: "Growth mix",
-              subtitle: "How the district mission is distributed across major tracks",
-              config: missionBlendConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            }),
-            h(ChartCard, {
-              key: "missionFlow",
-              title: "Mission momentum",
-              subtitle: "A compact view of expansion intensity across all future tracks",
-              config: missionFlowConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            })
-          ])
-        ]),
-        h("div", { key: "executionBoards", className: "intelligence-double-grid visual-board-double-grid" }, [
-          h("section", { key: "programBoard", className: "visual-graph-board" }, [
-            h("div", { key: "head", className: "intelligence-section-head" }, [
-              h("span", { key: "eyebrow", className: "section-eyebrow" }, "Delivery programme sheet"),
-              h("h3", { key: "title", className: "table-title" }, "Programme pipeline with targets and district impact"),
-              h(
-                "p",
-                { key: "desc", className: "command-muted" },
-                "The delivery block is now compressed into metrics and charts instead of a full text table."
-              )
-            ]),
-            h("div", { key: "tiles", className: "visual-metric-row" }, programTiles.map(renderVisualTile)),
-            h("div", { key: "graphs", className: "mini-graph-grid two-up" }, [
-              h(ChartCard, {
-                key: "programTimeline",
-                title: "Timeline stack",
-                subtitle: "Months needed across the main programmes",
-                config: programTimelineConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              }),
-              h(ChartCard, {
-                key: "programTargets",
-                title: "Target scale",
-                subtitle: "Relative size of the programme targets",
-                config: programTargetConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              })
-            ])
-          ]),
-          h("section", { key: "businessBoard", className: "visual-graph-board" }, [
-            h("div", { key: "head", className: "intelligence-section-head" }, [
-              h("span", { key: "eyebrow", className: "section-eyebrow" }, "Business architecture"),
-              h("h3", { key: "title", className: "table-title" }, "Business models that support long-term district growth"),
-              h(
-                "p",
-                { key: "desc", className: "command-muted" },
-                "The business side is now graph-led too, so it looks like a real planning interface instead of a document block."
-              )
-            ]),
-            h("div", { key: "tiles", className: "visual-metric-row" }, businessTiles.map(renderVisualTile)),
-            h("div", { key: "graphs", className: "mini-graph-grid two-up" }, [
-              h(ChartCard, {
-                key: "businessMix",
-                title: "Business model mix",
-                subtitle: "The four long-term revenue structures in one ring",
-                config: businessModelMixConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              }),
-              h(ChartCard, {
-                key: "businessMomentum",
-                title: "Readiness by model",
-                subtitle: "Agri, marketplace, utility, and tourism priority scores",
-                config: businessMomentumConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              })
-            ])
-          ])
-        ]),
-        h(AirQualitySection, {
-          key: "aqi",
-          compact: true,
-          eyebrow: "Growth AQI",
-          title: "AQI remains visible so growth, transport, dams, and enterprise plans stay linked to environmental quality",
-          description:
-            "A real growth page should still show environmental conditions, so the expansion narrative remains grounded rather than only aspirational."
-        })
-      ])
-    ])
-  ]);
+  return <div>
+  <PageBanner key="banner" chips={[
+          "Metro and airports",
+          "Startups and business models",
+          "Land and dams",
+          "Solar and e-education",
+          "Commerce and services",
+          "Live AQI"
+        ]} />
+  <InsightMarquee key="marquee" eyebrow="Growth Priorities" items={growthMarqueeItems} speed="slow" reverse />
+  <section key="body" className="growth-page-section">
+    <div key="container" className="container">
+      <div key="hero" className="intelligence-command-board growth-command-board">
+        <div key="copy" className="command-copy growth-command-copy">
+          <span key="eyebrow" className="section-eyebrow">Regional growth mission</span>
+          <h2 key="title" className="command-title growth-command-title">Growth now reads like a future district mission board with metro, airport, dam, solar, startups, land, commerce, and disaster-management tracks</h2>
+          <p key="description" className="command-description growth-command-description">This page now carries the future-facing side of the platform. It brings together transport, air-cargo, dam modernization, solar expansion, e-education, serviced land, startup zones, dairy networks, ecommerce delivery, and business models so the growth narrative feels large-scale and credible.</p>
+          <div key="chips" className="command-chip-row growth-chip-row">
+            {[
+                            "Metro-lite mobility",
+                            "Airport cargo",
+                            "Dams and water security",
+                            "Solar transition",
+                            "Land bank",
+                            "Startups and commerce"
+                          ].map((chip) =>
+                            <span key={chip} className="command-chip growth-command-chip">
+              {chip}
+            </span>
+                          )}
+          </div>
+          <div key="signals" className="command-signal-grid growth-signal-grid">
+            {growthHeroSignals.map(renderGrowthSignal)}
+          </div>
+        </div>
+        <div key="visual" className="command-visual-shell growth-visual-shell">
+          <div key="frame" className="command-visual-frame growth-visual-frame">
+            <img key="image" src="/images/growth-reference.jpg" alt="Growth mission reference board" className="command-reference-image" />
+            <div key="panel1" className="command-overlay-card overlay-top growth-overlay-card">
+              <span key="label" className="command-overlay-label">Growth cluster scope</span>
+              <strong key="value" className="command-overlay-value">Metro + airport + logistics</strong>
+              <p key="text" className="command-overlay-note">Mobility, cargo, and service access stitched into one expansion frame</p>
+            </div>
+            <div key="panel2" className="command-overlay-card overlay-bottom-left growth-overlay-card">
+              <span key="label" className="command-overlay-label">Enterprise land bank</span>
+              <strong key="value" className="command-overlay-value">1,460 acres tagged</strong>
+              <p key="text" className="command-overlay-note">Sites aligned for agro-processing, startups, tourism, and logistics</p>
+            </div>
+            <div key="panel3" className="command-overlay-card overlay-bottom-right growth-overlay-card">
+              <span key="label" className="command-overlay-label">Disaster management</span>
+              <strong key="value" className="command-overlay-value">42 sensor points</strong>
+              <p key="text" className="command-overlay-note">Warning, relief, shelter, and flood routing now sit inside the growth layer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div key="stats" className="stats-grid compact-grid intelligence-kpi-strip">
+        {growthSummaryCards.map((card) =>
+                    <StatCard key={card.key} icon={card.icon} title={card.title} value={card.value} description={card.description} formatter={card.formatter} tone={card.tone} />
+                  )}
+      </div>
+      <div key="charts" className="intelligence-chart-grid">
+        <ChartCard key="timeline" title="Quarter-on-quarter development pattern" subtitle="Agriculture, electricity, and literacy remain visible in the future story" config={timelineChartConfig} />
+        <ChartCard key="leaders" title="Top growth villages" subtitle="Growth index and infrastructure support by leading villages" config={growthLeaderConfig} />
+        <ChartCard key="timelines" title="Program delivery timelines" subtitle="Enterprise, logistics, skills, dairy, tourism, and disaster missions" config={programTimelineConfig} />
+        <ChartCard key="renewable" title="Renewable and e-education readiness" subtitle="Tracks whether future missions are backed by clean energy and classroom capacity" config={renewableReadinessConfig} />
+      </div>
+      <section key="missionBoard" className="growth-track-shell visual-graph-board">
+        <div key="head" className="intelligence-section-head">
+          <span key="eyebrow" className="section-eyebrow">Upcoming growth programmes</span>
+          <h3 key="title" className="table-title">Metro, airports, dams, land, startups, solar, ecommerce, and business-model tracks</h3>
+          <p key="desc" className="command-muted">This block now behaves like a graph dashboard instead of a stack of descriptive cards.</p>
+        </div>
+        <div key="tiles" className="visual-metric-row">
+          {missionTiles.map(renderVisualTile)}
+        </div>
+        <div key="graphs" className="mini-graph-grid service-graph-grid">
+          <ChartCard key="missionScale" title="Mission scale" subtitle="Relative size of the future expansion tracks" config={missionScaleConfig} className="compact-graph-card" canvasHeight={180} />
+          <ChartCard key="missionRadar" title="Mission readiness map" subtitle="Mobility, water, energy, skills, land, and enterprise radar" config={missionRadarConfig} className="compact-graph-card" canvasHeight={180} />
+          <ChartCard key="missionBlend" title="Growth mix" subtitle="How the district mission is distributed across major tracks" config={missionBlendConfig} className="compact-graph-card" canvasHeight={180} />
+          <ChartCard key="missionFlow" title="Mission momentum" subtitle="A compact view of expansion intensity across all future tracks" config={missionFlowConfig} className="compact-graph-card" canvasHeight={180} />
+        </div>
+      </section>
+      <div key="executionBoards" className="intelligence-double-grid visual-board-double-grid">
+        <section key="programBoard" className="visual-graph-board">
+          <div key="head" className="intelligence-section-head">
+            <span key="eyebrow" className="section-eyebrow">Delivery programme sheet</span>
+            <h3 key="title" className="table-title">Programme pipeline with targets and district impact</h3>
+            <p key="desc" className="command-muted">The delivery block is now compressed into metrics and charts instead of a full text table.</p>
+          </div>
+          <div key="tiles" className="visual-metric-row">
+            {programTiles.map(renderVisualTile)}
+          </div>
+          <div key="graphs" className="mini-graph-grid two-up">
+            <ChartCard key="programTimeline" title="Timeline stack" subtitle="Months needed across the main programmes" config={programTimelineConfig} className="compact-graph-card" canvasHeight={170} />
+            <ChartCard key="programTargets" title="Target scale" subtitle="Relative size of the programme targets" config={programTargetConfig} className="compact-graph-card" canvasHeight={170} />
+          </div>
+        </section>
+        <section key="businessBoard" className="visual-graph-board">
+          <div key="head" className="intelligence-section-head">
+            <span key="eyebrow" className="section-eyebrow">Business architecture</span>
+            <h3 key="title" className="table-title">Business models that support long-term district growth</h3>
+            <p key="desc" className="command-muted">The business side is now graph-led too, so it looks like a real planning interface instead of a document block.</p>
+          </div>
+          <div key="tiles" className="visual-metric-row">
+            {businessTiles.map(renderVisualTile)}
+          </div>
+          <div key="graphs" className="mini-graph-grid two-up">
+            <ChartCard key="businessMix" title="Business model mix" subtitle="The four long-term revenue structures in one ring" config={businessModelMixConfig} className="compact-graph-card" canvasHeight={170} />
+            <ChartCard key="businessMomentum" title="Readiness by model" subtitle="Agri, marketplace, utility, and tourism priority scores" config={businessMomentumConfig} className="compact-graph-card" canvasHeight={170} />
+          </div>
+        </section>
+      </div>
+      <AirQualitySection key="aqi" compact eyebrow="Growth AQI" title="AQI remains visible so growth, transport, dams, and enterprise plans stay linked to environmental quality" description="A real growth page should still show environmental conditions, so the expansion narrative remains grounded rather than only aspirational." />
+    </div>
+  </section>
+</div>;
 };
 
 export default GrowthPage;

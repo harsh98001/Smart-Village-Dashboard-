@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { h } from "../utils/h";
 import apiClient from "../api/client";
 
 const AuthContext = React.createContext(null);
@@ -95,10 +94,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  return h(
-    AuthContext.Provider,
-    {
-      value: {
+  return <AuthContext.Provider value={{
         user,
         token,
         loading,
@@ -111,10 +107,9 @@ export const AuthProvider = ({ children }) => {
         signupUser,
         logoutUser,
         isAdmin: user?.role === "admin"
-      }
-    },
-    children
-  );
+      }}>
+  {children}
+</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

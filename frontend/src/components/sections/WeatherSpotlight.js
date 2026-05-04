@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { h } from "../../utils/h";
-
 const defaultRegion = {
   name: "Kapurthala",
   state: "Punjab",
@@ -163,18 +161,18 @@ const buildTemperatureModel = (entries) => {
 };
 
 const WeatherIcon = ({ theme, compact = false }) =>
-  h("div", { className: `weather-mini-icon weather-mini-icon-${theme}${compact ? " compact" : ""}` }, [
-    h("span", { key: "sun", className: "weather-mini-sun" }),
-    h("span", { key: "moon", className: "weather-mini-moon" }),
-    h("span", { key: "cloud1", className: "weather-mini-cloud cloud-a" }),
-    h("span", { key: "cloud2", className: "weather-mini-cloud cloud-b" }),
-    h("span", { key: "rain1", className: "weather-mini-rain drop-a" }),
-    h("span", { key: "rain2", className: "weather-mini-rain drop-b" }),
-    h("span", { key: "rain3", className: "weather-mini-rain drop-c" }),
-    h("span", { key: "bolt", className: "weather-mini-bolt" }),
-    h("span", { key: "mist1", className: "weather-mini-mist mist-a" }),
-    h("span", { key: "mist2", className: "weather-mini-mist mist-b" })
-  ]);
+  <div className={`weather-mini-icon weather-mini-icon-${theme}${compact ? " compact" : ""}`}>
+  <span key="sun" className="weather-mini-sun" />
+  <span key="moon" className="weather-mini-moon" />
+  <span key="cloud1" className="weather-mini-cloud cloud-a" />
+  <span key="cloud2" className="weather-mini-cloud cloud-b" />
+  <span key="rain1" className="weather-mini-rain drop-a" />
+  <span key="rain2" className="weather-mini-rain drop-b" />
+  <span key="rain3" className="weather-mini-rain drop-c" />
+  <span key="bolt" className="weather-mini-bolt" />
+  <span key="mist1" className="weather-mini-mist mist-a" />
+  <span key="mist2" className="weather-mini-mist mist-b" />
+</div>;
 
 const WeatherSpotlight = ({
   regionName = defaultRegion.name,
@@ -281,147 +279,113 @@ const WeatherSpotlight = ({
   const currentVisual = getWeatherVisual(currentWeather.weather_code, currentWeather.is_day);
   const chartModel = buildTemperatureModel(weatherState.hourly);
 
-  return h("section", { className: "weather-spotlight-section weather-compact-section" }, [
-    h("div", { key: "container", className: "container" }, [
-      h("div", { key: "card", className: "weather-card premium-card weather-compact-card" }, [
-        h("div", { key: "top", className: "weather-compact-topbar" }, [
-          h("div", { key: "location", className: "weather-compact-location" }, [
-            h("span", { key: "dot", className: "weather-location-dot" }),
-            h("strong", { key: "name" }, weatherState.regionLabel),
-            h("span", { key: "update", className: "weather-update-pill" }, weatherState.loading ? "Updating" : `Updated ${weatherState.updatedLabel}`)
-          ]),
-          h(
-            "span",
-            { key: "source", className: "weather-source-label" },
-            weatherState.sourceLabel
-          )
-        ]),
-        h("div", { key: "main", className: "weather-compact-main" }, [
-          h("div", { key: "left", className: "weather-compact-current" }, [
-            h(WeatherIcon, { key: "icon", theme: currentVisual.theme }),
-            h("div", { key: "tempWrap", className: "weather-current-temp-wrap" }, [
-              h("strong", { key: "temp", className: "weather-current-temp" }, `${Math.round(currentWeather.temperature_2m)}°`),
-              h("span", { key: "unit", className: "weather-current-unit" }, "C")
-            ]),
-            h("div", { key: "metrics", className: "weather-current-metrics" }, [
-              h("div", { key: "precip" }, `Precipitation: ${Math.round(weatherState.daily[0]?.precipitation_probability_max || 0)}%`),
-              h("div", { key: "humidity" }, `Humidity: ${Math.round(currentWeather.relative_humidity_2m)}%`),
-              h("div", { key: "wind" }, `Wind: ${Math.round(currentWeather.wind_speed_10m)} km/h`)
-            ])
-          ]),
-          h("div", { key: "summary", className: "weather-compact-summary" }, [
-            h("strong", { key: "title", className: "weather-summary-title" }, "Weather"),
-            h("span", { key: "time", className: "weather-summary-time" }, weatherState.currentDateLabel),
-            h("span", { key: "condition", className: "weather-summary-condition" }, currentVisual.label),
-            weatherState.error
-              ? h("span", { key: "error", className: "weather-summary-note" }, weatherState.error)
-              : null
-          ])
-        ]),
-        h("div", { key: "tabs", className: "weather-compact-tabs" }, [
-          h("span", { key: "temp", className: "weather-tab active" }, "Temperature"),
-          h("span", { key: "precip", className: "weather-tab" }, "Precipitation"),
-          h("span", { key: "wind", className: "weather-tab" }, "Wind")
-        ]),
-        h("div", { key: "chart", className: "weather-mini-chart-card" }, [
-          h(
-            "svg",
-            {
-              key: "svg",
-              className: "weather-mini-chart-svg",
-              viewBox: `0 0 ${chartModel.width} ${chartModel.height}`,
-              preserveAspectRatio: "none"
-            },
-            [
-              h("defs", { key: "defs" }, [
-                h(
-                  "linearGradient",
-                  {
-                    key: "fill",
-                    id: "weatherChartFill",
-                    x1: "0%",
-                    y1: "0%",
-                    x2: "0%",
-                    y2: "100%"
-                  },
-                  [
-                    h("stop", {
-                      key: "s1",
-                      offset: "0%",
-                      stopColor: "#f7c448",
-                      stopOpacity: "0.34"
-                    }),
-                    h("stop", {
-                      key: "s2",
-                      offset: "100%",
-                      stopColor: "#f7c448",
-                      stopOpacity: "0.06"
-                    })
-                  ]
-                )
-              ]),
-              h("path", {
-                key: "area",
-                d: chartModel.areaPath,
-                fill: "url(#weatherChartFill)"
-              }),
-              h("path", {
-                key: "line",
-                d: chartModel.linePath,
-                fill: "none",
-                stroke: "#f5b301",
-                strokeWidth: "3.5",
-                strokeLinecap: "round",
-                strokeLinejoin: "round"
-              })
-            ].concat(
-              chartModel.points.flatMap((point, index) => [
-                h("circle", {
-                  key: `point-${index}`,
-                  cx: point.x,
-                  cy: point.y,
-                  r: "3.6",
-                  fill: "#f5b301"
-                }),
-                h(
-                  "text",
-                  {
-                    key: `temp-label-${index}`,
-                    x: point.x,
-                    y: point.y - 10,
-                    textAnchor: "middle",
-                    className: "weather-chart-temp-label"
-                  },
-                  String(Math.round(point.value))
-                )
-              ])
-            )
-          ),
-          h(
-            "div",
-            { key: "labels", className: "weather-chart-time-row" },
-            weatherState.hourly.map((entry, index) =>
-              h("span", { key: `${entry.time}-${index}`, className: "weather-chart-time-label" }, formatHourLabel(entry.time))
-            )
-          )
-        ]),
-        h(
-          "div",
-          { key: "days", className: "weather-compact-days" },
-          weatherState.daily.slice(0, 6).map((entry, index) => {
-            const visual = getWeatherVisual(entry.weather_code, 1);
+  return <section className="weather-spotlight-section weather-compact-section">
+  <div key="container" className="container">
+    <div key="card" className="weather-card premium-card weather-compact-card">
+      <div key="top" className="weather-compact-topbar">
+        <div key="location" className="weather-compact-location">
+          <span key="dot" className="weather-location-dot" />
+          <strong key="name">
+            {weatherState.regionLabel}
+          </strong>
+          <span key="update" className="weather-update-pill">
+            {weatherState.loading ? "Updating" : `Updated ${weatherState.updatedLabel}`}
+          </span>
+        </div>
+        <span key="source" className="weather-source-label">
+          {weatherState.sourceLabel}
+        </span>
+      </div>
+      <div key="main" className="weather-compact-main">
+        <div key="left" className="weather-compact-current">
+          <WeatherIcon key="icon" theme={currentVisual.theme} />
+          <div key="tempWrap" className="weather-current-temp-wrap">
+            <strong key="temp" className="weather-current-temp">
+              {`${Math.round(currentWeather.temperature_2m)}°`}
+            </strong>
+            <span key="unit" className="weather-current-unit">C</span>
+          </div>
+          <div key="metrics" className="weather-current-metrics">
+            <div key="precip">
+              {`Precipitation: ${Math.round(weatherState.daily[0]?.precipitation_probability_max || 0)}%`}
+            </div>
+            <div key="humidity">
+              {`Humidity: ${Math.round(currentWeather.relative_humidity_2m)}%`}
+            </div>
+            <div key="wind">
+              {`Wind: ${Math.round(currentWeather.wind_speed_10m)} km/h`}
+            </div>
+          </div>
+        </div>
+        <div key="summary" className="weather-compact-summary">
+          <strong key="title" className="weather-summary-title">Weather</strong>
+          <span key="time" className="weather-summary-time">
+            {weatherState.currentDateLabel}
+          </span>
+          <span key="condition" className="weather-summary-condition">
+            {currentVisual.label}
+          </span>
+          {weatherState.error
+                        ? <span key="error" className="weather-summary-note">
+            {weatherState.error}
+          </span>
+                        : null}
+        </div>
+      </div>
+      <div key="tabs" className="weather-compact-tabs">
+        <span key="temp" className="weather-tab active">Temperature</span>
+        <span key="precip" className="weather-tab">Precipitation</span>
+        <span key="wind" className="weather-tab">Wind</span>
+      </div>
+      <div key="chart" className="weather-mini-chart-card">
+        <svg key="svg" className="weather-mini-chart-svg" viewBox={`0 0 ${chartModel.width} ${chartModel.height}`} preserveAspectRatio="none">
+          {[
+                        <defs key="defs">
+            <linearGradient key="fill" id="weatherChartFill" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop key="s1" offset="0%" stopColor="#f7c448" stopOpacity="0.34" />
+              <stop key="s2" offset="100%" stopColor="#f7c448" stopOpacity="0.06" />
+            </linearGradient>
+          </defs>,
+                        <path key="area" d={chartModel.areaPath} fill="url(#weatherChartFill)" />,
+                        <path key="line" d={chartModel.linePath} fill="none" stroke="#f5b301" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+                      ].concat(
+                        chartModel.points.flatMap((point, index) => [
+                          <circle key={`point-${index}`} cx={point.x} cy={point.y} r="3.6" fill="#f5b301" />,
+                          <text key={`temp-label-${index}`} x={point.x} y={point.y - 10} textAnchor="middle" className="weather-chart-temp-label">
+            {String(Math.round(point.value))}
+          </text>
+                        ])
+                      )}
+        </svg>
+        <div key="labels" className="weather-chart-time-row">
+          {weatherState.hourly.map((entry, index) =>
+                        <span key={`${entry.time}-${index}`} className="weather-chart-time-label">
+            {formatHourLabel(entry.time)}
+          </span>
+                      )}
+        </div>
+      </div>
+      <div key="days" className="weather-compact-days">
+        {weatherState.daily.slice(0, 6).map((entry, index) => {
+                    const visual = getWeatherVisual(entry.weather_code, 1);
 
-            return h("div", { key: `${entry.time}-${index}`, className: "weather-day-card" }, [
-              h("span", { key: "day", className: "weather-day-label" }, formatDayLabel(entry.time)),
-              h(WeatherIcon, { key: "icon", theme: visual.theme, compact: true }),
-              h("strong", { key: "temp", className: "weather-day-temp" }, `${Math.round(entry.temperature_2m_max)}° ${Math.round(entry.temperature_2m_min)}°`),
-              h("span", { key: "condition", className: "weather-day-condition" }, visual.label)
-            ]);
-          })
-        )
-      ])
-    ])
-  ]);
+                    return <div key={`${entry.time}-${index}`} className="weather-day-card">
+          <span key="day" className="weather-day-label">
+            {formatDayLabel(entry.time)}
+          </span>
+          <WeatherIcon key="icon" theme={visual.theme} compact />
+          <strong key="temp" className="weather-day-temp">
+            {`${Math.round(entry.temperature_2m_max)}° ${Math.round(entry.temperature_2m_min)}°`}
+          </strong>
+          <span key="condition" className="weather-day-condition">
+            {visual.label}
+          </span>
+        </div>;
+                  })}
+      </div>
+    </div>
+  </div>
+</section>;
 };
 
 export default WeatherSpotlight;

@@ -1,12 +1,10 @@
 import React from "react";
-import { h } from "../../utils/h";
-
 const LoadingScreen = ({ active }) =>
   active
-    ? h("div", { className: "loading-screen" }, [
-        h("div", { key: "ring", className: "loading-ring" }),
-        h("span", { key: "label", className: "loading-label" }, "Syncing dashboard intelligence")
-      ])
+    ? <div className="loading-screen">
+  <div key="ring" className="loading-ring" />
+  <span key="label" className="loading-label">Syncing dashboard intelligence</span>
+</div>
     : null;
 
 export default LoadingScreen;

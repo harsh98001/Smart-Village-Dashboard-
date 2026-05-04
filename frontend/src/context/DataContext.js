@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { h } from "../utils/h";
 import apiClient from "../api/client";
 import {
   sampleVillages,
@@ -136,10 +135,7 @@ export const DataProvider = ({ children }) => {
     syncDerivedState(villages, nextNotifications);
   };
 
-  return h(
-    DataContext.Provider,
-    {
-      value: {
+  return <DataContext.Provider value={{
         villages,
         notifications,
         overview,
@@ -151,10 +147,9 @@ export const DataProvider = ({ children }) => {
         removeVillage,
         publishNotification,
         deleteNotification
-      }
-    },
-    children
-  );
+      }}>
+  {children}
+</DataContext.Provider>;
 };
 
 export const useData = () => useContext(DataContext);

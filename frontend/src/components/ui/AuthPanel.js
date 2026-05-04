@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { h } from "../../utils/h";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 
@@ -56,191 +55,73 @@ const AuthPanel = ({ mode = "login", compact = false, onSuccess, onSwitch }) => 
 
   const isLogin = mode === "login";
 
-  return h(
-    "div",
-    {
-      className: compact ? "auth-panel compact" : "auth-panel"
-    },
-    [
-      h("div", { key: "header", className: "auth-panel-header" }, [
-        h("span", { key: "eyebrow", className: "section-eyebrow" }, "Secure access"),
-        h(
-          "h2",
-          { key: "title", className: "section-heading" },
-          isLogin ? "Enter the governance dashboard" : "Create your dashboard account"
-        ),
-        h(
-          "p",
-          { key: "description", className: "section-description" },
-          isLogin
-            ? "Use the seeded admin account to test CRUD, broadcasts, and analytics flows."
-            : "Choose the right access role and continue to the landing experience."
-        )
-      ]),
-      h(
-        "form",
-        {
-          key: "form",
-          className: "auth-form",
-          onSubmit: handleSubmit
-        },
-        (
-          isLogin
-          ? [
-              h("input", {
-                key: "email",
-                className: "form-control",
-                type: "email",
-                placeholder: "Email address",
-                value: loginForm.email,
-                onChange: (event) =>
-                  setLoginForm({ ...loginForm, email: event.target.value })
-              }),
-              h("input", {
-                key: "password",
-                className: "form-control",
-                type: "password",
-                placeholder: "Password",
-                value: loginForm.password,
-                onChange: (event) =>
-                  setLoginForm({ ...loginForm, password: event.target.value })
-              }),
-              h(
-                "div",
-                {
-                  key: "hint",
-                  className: "auth-hint"
-                },
-                "Demo admin: admin@smartvillage.in / Admin@123"
-              )
-            ]
-          : [
-              h("input", {
-                key: "name",
-                className: "form-control",
-                type: "text",
-                placeholder: "Full name",
-                value: signupForm.name,
-                onChange: (event) =>
-                  setSignupForm({ ...signupForm, name: event.target.value })
-              }),
-              h("input", {
-                key: "email",
-                className: "form-control",
-                type: "email",
-                placeholder: "Email address",
-                value: signupForm.email,
-                onChange: (event) =>
-                  setSignupForm({ ...signupForm, email: event.target.value })
-              }),
-              h("input", {
-                key: "password",
-                className: "form-control",
-                type: "password",
-                placeholder: "Password",
-                value: signupForm.password,
-                onChange: (event) =>
-                  setSignupForm({ ...signupForm, password: event.target.value })
-              }),
-              h(
-                "div",
-                { key: "row", className: "auth-form-row" },
-                [
-                  h(
-                    "select",
-                    {
-                      key: "role",
-                      className: "form-select",
-                      value: signupForm.role,
-                      onChange: (event) =>
-                        setSignupForm({ ...signupForm, role: event.target.value })
-                    },
-                    [
-                      h("option", { key: "user", value: "user" }, "Normal User"),
-                      h("option", { key: "admin", value: "admin" }, "Admin")
-                    ]
-                  ),
-                  h("input", {
-                    key: "state",
-                    className: "form-control",
-                    type: "text",
-                    placeholder: "State",
-                    value: signupForm.state,
-                    onChange: (event) =>
-                      setSignupForm({ ...signupForm, state: event.target.value })
-                  })
+  return <div className={compact ? "auth-panel compact" : "auth-panel"}>
+  <div key="header" className="auth-panel-header">
+    <span key="eyebrow" className="section-eyebrow">Secure access</span>
+    <h2 key="title" className="section-heading">
+      {isLogin ? "Enter the governance dashboard" : "Create your dashboard account"}
+    </h2>
+    <p key="description" className="section-description">
+      {isLogin
+                  ? "Use the seeded admin account to test CRUD, broadcasts, and analytics flows."
+                  : "Choose the right access role and continue to the landing experience."}
+    </p>
+  </div>
+  <form key="form" className="auth-form" onSubmit={handleSubmit}>
+    {(
+              isLogin
+              ? [
+                  <input key="email" className="form-control" type="email" placeholder="Email address" value={loginForm.email} onChange={(event) =>
+                      setLoginForm({ ...loginForm, email: event.target.value })} />,
+                  <input key="password" className="form-control" type="password" placeholder="Password" value={loginForm.password} onChange={(event) =>
+                      setLoginForm({ ...loginForm, password: event.target.value })} />,
+                  <div key="hint" className="auth-hint">Demo admin: admin@smartvillage.in / Admin@123</div>
                 ]
-              ),
-              h("input", {
-                key: "designation",
-                className: "form-control",
-                type: "text",
-                placeholder: "Designation",
-                value: signupForm.designation,
-                onChange: (event) =>
-                  setSignupForm({ ...signupForm, designation: event.target.value })
-              })
-            ]
-        ).concat([
-          h(
-            "button",
-            {
-              key: "submit",
-              type: "submit",
-              className: "btn btn-smart-primary auth-submit",
-              disabled: loading
-            },
-            loading
-              ? "Please wait..."
-              : isLogin
-                ? "Login to Platform"
-                : "Create Account"
-          )
-        ])
-      ),
-      h("div", { key: "footer", className: "auth-panel-footer" }, [
-        isLogin
-          ? h(
-              "span",
-              { key: "message" },
-              [
-                "Need an account? ",
-                onSwitch
-                  ? h(
-                      "button",
-                      {
-                        key: "switch",
-                        type: "button",
-                        className: "inline-link-button",
-                        onClick: () => onSwitch("signup")
-                      },
-                      "Signup here"
-                    )
-                  : h(Link, { key: "link", to: "/signup" }, "Signup here")
-              ]
-            )
-          : h(
-              "span",
-              { key: "message" },
-              [
-                "Already registered? ",
-                onSwitch
-                  ? h(
-                      "button",
-                      {
-                        key: "switch",
-                        type: "button",
-                        className: "inline-link-button",
-                        onClick: () => onSwitch("login")
-                      },
-                      "Login here"
-                    )
-                  : h(Link, { key: "link", to: "/login" }, "Login here")
-              ]
-            )
-      ])
-    ]
-  );
+              : [
+                  <input key="name" className="form-control" type="text" placeholder="Full name" value={signupForm.name} onChange={(event) =>
+                      setSignupForm({ ...signupForm, name: event.target.value })} />,
+                  <input key="email" className="form-control" type="email" placeholder="Email address" value={signupForm.email} onChange={(event) =>
+                      setSignupForm({ ...signupForm, email: event.target.value })} />,
+                  <input key="password" className="form-control" type="password" placeholder="Password" value={signupForm.password} onChange={(event) =>
+                      setSignupForm({ ...signupForm, password: event.target.value })} />,
+                  <div key="row" className="auth-form-row">
+      <select key="role" className="form-select" value={signupForm.role} onChange={(event) =>
+                              setSignupForm({ ...signupForm, role: event.target.value })}>
+        <option key="user" value="user">Normal User</option>
+        <option key="admin" value="admin">Admin</option>
+      </select>
+      <input key="state" className="form-control" type="text" placeholder="State" value={signupForm.state} onChange={(event) =>
+                            setSignupForm({ ...signupForm, state: event.target.value })} />
+    </div>,
+                  <input key="designation" className="form-control" type="text" placeholder="Designation" value={signupForm.designation} onChange={(event) =>
+                      setSignupForm({ ...signupForm, designation: event.target.value })} />
+                ]
+            ).concat([
+              <button key="submit" type="submit" className="btn btn-smart-primary auth-submit" disabled={loading}>
+      {loading
+                    ? "Please wait..."
+                    : isLogin
+                      ? "Login to Platform"
+                      : "Create Account"}
+    </button>
+            ])}
+  </form>
+  <div key="footer" className="auth-panel-footer">
+    {isLogin
+              ? <span key="message">
+      Need an account? 
+      {onSwitch
+                        ? <button key="switch" type="button" className="inline-link-button" onClick={() => onSwitch("signup")}>Signup here</button>
+                        : <Link key="link" to="/signup">Signup here</Link>}
+    </span>
+              : <span key="message">
+      Already registered? 
+      {onSwitch
+                        ? <button key="switch" type="button" className="inline-link-button" onClick={() => onSwitch("login")}>Login here</button>
+                        : <Link key="link" to="/login">Login here</Link>}
+    </span>}
+  </div>
+</div>;
 };
 
 export default AuthPanel;

@@ -1,5 +1,4 @@
 import React from "react";
-import { h } from "../../utils/h";
 import SectionTitle from "../ui/SectionTitle";
 import VillageCard from "../ui/VillageCard";
 
@@ -10,23 +9,13 @@ const VillageHighlights = ({
   description = "Each card shows a quick snapshot of water, electricity, infrastructure, literacy, soil, and development status.",
   className = ""
 }) =>
-  h("section", { className: "village-highlights-section" }, [
-    h("div", { key: "container", className: `container ${className}`.trim() }, [
-      h(SectionTitle, {
-        key: "title",
-        eyebrow,
-        title,
-        description
-      }),
-      h(
-        "div",
-        {
-          key: "grid",
-          className: "village-grid"
-        },
-        villages.map((village) => h(VillageCard, { key: village._id, village }))
-      )
-    ])
-  ]);
+  <section className="village-highlights-section">
+  <div key="container" className={`container ${className}`.trim()}>
+    <SectionTitle key="title" eyebrow={eyebrow} title={title} description={description} />
+    <div key="grid" className="village-grid">
+      {villages.map((village) => <VillageCard key={village._id} village={village} />)}
+    </div>
+  </div>
+</section>;
 
 export default VillageHighlights;

@@ -1,5 +1,4 @@
 import React from "react";
-import { h } from "../../utils/h";
 import Header from "./Header";
 import Footer from "./Footer";
 import NotificationRibbon from "./NotificationRibbon";
@@ -14,23 +13,25 @@ const AppLayout = ({ children }) => {
   const { loading } = useData();
   useGlobalParallax();
 
-  return h("div", { className: "app-shell" }, [
-    h("div", { key: "parallaxBg", className: "app-parallax-background", "aria-hidden": "true" }, [
-      h("div", { key: "grid", className: "app-parallax-grid" }),
-      h("div", { key: "orbSky", className: "app-parallax-orb orb-sky" }),
-      h("div", { key: "orbMilkshake", className: "app-parallax-orb orb-milkshake" }),
-      h("div", { key: "orbGreen", className: "app-parallax-orb orb-green" }),
-      h("div", { key: "orbMaroon", className: "app-parallax-orb orb-maroon" })
-    ]),
-    h(Header, { key: "header" }),
-    h(NotificationRibbon, { key: "ribbon" }),
-    h("main", { key: "main", className: "page-content" }, children),
-    h(Footer, { key: "footer" }),
-    h(AuthModal, { key: "auth" }),
-    h(AssistantWidget, { key: "assistant" }),
-    h(ToastStack, { key: "toasts" }),
-    h(LoadingScreen, { key: "loading", active: loading })
-  ]);
+  return <div className="app-shell">
+  <div key="parallaxBg" className="app-parallax-background" aria-hidden="true">
+    <div key="grid" className="app-parallax-grid" />
+    <div key="orbSky" className="app-parallax-orb orb-sky" />
+    <div key="orbMilkshake" className="app-parallax-orb orb-milkshake" />
+    <div key="orbGreen" className="app-parallax-orb orb-green" />
+    <div key="orbMaroon" className="app-parallax-orb orb-maroon" />
+  </div>
+  <Header key="header" />
+  <NotificationRibbon key="ribbon" />
+  <main key="main" className="page-content">
+    {children}
+  </main>
+  <Footer key="footer" />
+  <AuthModal key="auth" />
+  <AssistantWidget key="assistant" />
+  <ToastStack key="toasts" />
+  <LoadingScreen key="loading" active={loading} />
+</div>;
 };
 
 export default AppLayout;

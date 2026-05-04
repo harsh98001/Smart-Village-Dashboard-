@@ -1,54 +1,23 @@
 import React from "react";
-import { h } from "../../utils/h";
 import Counter from "./Counter";
 
 const StatCard = ({ icon, title, value, description, formatter, tone = "sky" }) =>
-  h("div", { className: `stat-card tone-${tone}` }, [
-    h(
-      "div",
-      {
-        key: "icon",
-        className: "stat-icon"
-      },
-      icon || "◌"
-    ),
-    h(
-      "div",
-      {
-        key: "body",
-        className: "stat-body"
-      },
-      [
-        h(
-          "span",
-          {
-            key: "title",
-            className: "stat-title"
-          },
-          title
-        ),
-        h(
-          "strong",
-          {
-            key: "value",
-            className: "stat-value"
-          },
-          h(Counter, {
-            value,
-            formatter
-          })
-        ),
-        h(
-          "p",
-          {
-            key: "desc",
-            className: "stat-description"
-          },
-          description
-        )
-      ]
-    )
-  ]);
+  <div className={`stat-card tone-${tone}`}>
+  <div key="icon" className="stat-icon">
+    {icon || "◌"}
+  </div>
+  <div key="body" className="stat-body">
+    <span key="title" className="stat-title">
+      {title}
+    </span>
+    <strong key="value" className="stat-value">
+      <Counter value={value} formatter={formatter} />
+    </strong>
+    <p key="desc" className="stat-description">
+      {description}
+    </p>
+  </div>
+</div>;
 
 export default StatCard;
 

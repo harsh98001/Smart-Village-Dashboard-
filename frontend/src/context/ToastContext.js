@@ -1,6 +1,4 @@
 import React, { useContext, useState } from "react";
-import { h } from "../utils/h";
-
 const ToastContext = React.createContext(null);
 
 export const ToastProvider = ({ children }) => {
@@ -23,17 +21,13 @@ export const ToastProvider = ({ children }) => {
     window.setTimeout(() => removeToast(id), toast.duration || 3600);
   };
 
-  return h(
-    ToastContext.Provider,
-    {
-      value: {
+  return <ToastContext.Provider value={{
         toasts,
         pushToast,
         removeToast
-      }
-    },
-    children
-  );
+      }}>
+  {children}
+</ToastContext.Provider>;
 };
 
 export const useToast = () => useContext(ToastContext);

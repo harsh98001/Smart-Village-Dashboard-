@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { h } from "../utils/h";
 import { useAuth } from "../context/AuthContext";
 import { useData } from "../context/DataContext";
 import { useToast } from "../context/ToastContext";
@@ -604,360 +603,283 @@ const AdminEntryPage = () => {
     };
 
     if (field.type === "textarea") {
-      return h("textarea", {
-        ...commonProps,
-        rows: field.rows || 3
-      });
+      return <textarea {...commonProps} rows={field.rows || 3} />;
     }
 
-    return h("input", {
-      ...commonProps,
-      type: field.type || "text"
-    });
+    return <input {...commonProps} type={field.type || "text"} />;
   };
 
   if (!isAdmin) {
-    return h("div", null, [
-      h(PageBanner, { key: "banner", chips: ["Admin only"] }),
-      h("div", { key: "container", className: "container py-5" }, [
-        h("div", { key: "card", className: "premium-card access-card" }, [
-          h("h2", { key: "title", className: "section-heading" }, "Administrator access required"),
-          h(
-            "p",
-            { key: "text", className: "section-description" },
-            "Only admins can add or edit village records, publish alerts, and manage core dashboard intelligence."
-          )
-        ])
-      ])
-    ]);
+    return <div>
+  <PageBanner key="banner" chips={["Admin only"]} />
+  <div key="container" className="container py-5">
+    <div key="card" className="premium-card access-card">
+      <h2 key="title" className="section-heading">Administrator access required</h2>
+      <p key="text" className="section-description">Only admins can add or edit village records, publish alerts, and manage core dashboard intelligence.</p>
+    </div>
+  </div>
+</div>;
   }
 
-  return h("div", null, [
-    h(PageBanner, {
-      key: "banner",
-      chips: ["Admin governance studio", "Full data editing", "Keshar milkshake console"]
-    }),
-    h("section", { key: "body", className: "admin-page-section" }, [
-      h("div", { key: "container", className: "container admin-grid" }, [
-        h("div", { key: "formCard", className: "premium-card admin-form-card admin-kesar-shell" }, [
-          h("div", { key: "top", className: "admin-console-top" }, [
-            h("div", { key: "copy", className: "admin-console-copy" }, [
-              h("span", { key: "eyebrow", className: "section-eyebrow" }, "Admin Governance Studio"),
-              h("h3", { key: "title", className: "section-heading" }, "Full village intelligence editor"),
-              h(
-                "p",
-                { key: "description", className: "section-description" },
-                "Every major village, monitoring, and search-dashboard field can now be edited from this single admin page. Update the record, save it, and the Search dashboard will reflect the new copy instantly."
-              )
-            ]),
-            h("div", { key: "controls", className: "admin-console-controls" }, [
-              h("div", { key: "picker", className: "admin-record-picker" }, [
-                h("label", { key: "label", className: "admin-input-label" }, "Load existing village"),
-                h(
-                  "select",
-                  {
-                    key: "select",
-                    className: "form-select admin-record-select",
-                    value: selectedVillageId,
-                    onChange: (event) => handleVillageSelect(event.target.value)
-                  },
-                  [h("option", { key: "new", value: "" }, "Create new record")].concat(
-                    sortedVillages.map((village) =>
-                      h(
-                        "option",
-                        {
-                          key: village._id,
-                          value: village._id
-                        },
-                        `${village.name} - ${village.state}`
-                      )
-                    )
-                  )
-                )
-              ]),
-              h("div", { key: "actions", className: "admin-console-actions" }, [
-                h(
-                  "button",
-                  {
-                    key: "new",
-                    type: "button",
-                    className: "btn btn-outline-smart admin-reset-button",
-                    onClick: resetForm
-                  },
-                  editingVillage ? "Start New Record" : "Clear Form"
-                ),
-                editingVillage
-                  ? h(
-                      "span",
-                      {
-                        key: "editing",
-                        className: "admin-editing-pill"
-                      },
-                      `Editing ${editingVillage.name}`
-                    )
-                  : null
-              ])
-            ])
-          ]),
-          h("div", { key: "overview", className: "admin-overview-strip" }, [
-            h("div", { key: "villageCount", className: "admin-overview-card" }, [
-              h("span", { key: "label", className: "admin-overview-label" }, "Managed villages"),
-              h("strong", { key: "value" }, String(totalVillages))
-            ]),
-            h("div", { key: "growth", className: "admin-overview-card" }, [
-              h("span", { key: "label", className: "admin-overview-label" }, "Average growth"),
-              h("strong", { key: "value" }, `${averageGrowth}%`)
-            ]),
-            h("div", { key: "water", className: "admin-overview-card" }, [
-              h("span", { key: "label", className: "admin-overview-label" }, "Average water"),
-              h("strong", { key: "value" }, `${averageWater}%`)
-            ]),
-            h("div", { key: "cctv", className: "admin-overview-card" }, [
-              h("span", { key: "label", className: "admin-overview-label" }, "Live CCTV"),
-              h("strong", { key: "value" }, String(cctvSummary.live))
-            ])
-          ]),
-          h(
-            "form",
-            {
-              key: "form",
-              className: "admin-form-grid",
-              onSubmit: submitVillage
-            },
-            adminSections
-              .map((section) =>
-                h(
-                  "section",
-                  {
-                    key: section.id,
-                    className: `admin-section-card tone-${section.tone}`
-                  },
-                  [
-                    h("div", { key: "head", className: "admin-section-header" }, [
-                      h("div", { key: "copy", className: "admin-section-copy" }, [
-                        h("span", { key: "kicker", className: "admin-section-kicker" }, section.title),
-                        h("h4", { key: "title", className: "admin-field-group-title" }, section.title),
-                        h("p", { key: "desc", className: "admin-section-description" }, section.description)
-                      ])
-                    ]),
-                    h(
-                      "div",
-                      { key: "grid", className: "admin-form-section-grid" },
-                      section.fields.map((field) =>
-                        h(
-                          "div",
-                          {
-                            key: field.name,
-                            className: `admin-input-wrap${field.fullWidth ? " span-2" : ""}`
-                          },
-                          [
-                            h("label", { key: "label", className: "admin-input-label" }, field.label),
-                            renderFieldControl(field),
-                            field.helper
-                              ? h("span", { key: "helper", className: "admin-input-helper" }, field.helper)
-                              : null
-                          ]
+  return <div>
+  <PageBanner key="banner" chips={["Admin governance studio", "Full data editing", "Keshar milkshake console"]} />
+  <section key="body" className="admin-page-section">
+    <div key="container" className="container admin-grid">
+      <div key="formCard" className="premium-card admin-form-card admin-kesar-shell">
+        <div key="top" className="admin-console-top">
+          <div key="copy" className="admin-console-copy">
+            <span key="eyebrow" className="section-eyebrow">Admin Governance Studio</span>
+            <h3 key="title" className="section-heading">Full village intelligence editor</h3>
+            <p key="description" className="section-description">Every major village, monitoring, and search-dashboard field can now be edited from this single admin page. Update the record, save it, and the Search dashboard will reflect the new copy instantly.</p>
+          </div>
+          <div key="controls" className="admin-console-controls">
+            <div key="picker" className="admin-record-picker">
+              <label key="label" className="admin-input-label">Load existing village</label>
+              <select key="select" className="form-select admin-record-select" value={selectedVillageId} onChange={(event) => handleVillageSelect(event.target.value)}>
+                {[<option key="new" value="">Create new record</option>].concat(
+                                    sortedVillages.map((village) =>
+                                      <option key={village._id} value={village._id}>
+                  {`${village.name} - ${village.state}`}
+                </option>
+                                    )
+                                  )}
+              </select>
+            </div>
+            <div key="actions" className="admin-console-actions">
+              <button key="new" type="button" className="btn btn-outline-smart admin-reset-button" onClick={resetForm}>
+                {editingVillage ? "Start New Record" : "Clear Form"}
+              </button>
+              {editingVillage
+                                ? <span key="editing" className="admin-editing-pill">
+                {`Editing ${editingVillage.name}`}
+              </span>
+                                : null}
+            </div>
+          </div>
+        </div>
+        <div key="overview" className="admin-overview-strip">
+          <div key="villageCount" className="admin-overview-card">
+            <span key="label" className="admin-overview-label">Managed villages</span>
+            <strong key="value">
+              {String(totalVillages)}
+            </strong>
+          </div>
+          <div key="growth" className="admin-overview-card">
+            <span key="label" className="admin-overview-label">Average growth</span>
+            <strong key="value">
+              {`${averageGrowth}%`}
+            </strong>
+          </div>
+          <div key="water" className="admin-overview-card">
+            <span key="label" className="admin-overview-label">Average water</span>
+            <strong key="value">
+              {`${averageWater}%`}
+            </strong>
+          </div>
+          <div key="cctv" className="admin-overview-card">
+            <span key="label" className="admin-overview-label">Live CCTV</span>
+            <strong key="value">
+              {String(cctvSummary.live)}
+            </strong>
+          </div>
+        </div>
+        <form key="form" className="admin-form-grid" onSubmit={submitVillage}>
+          {adminSections
+                        .map((section) =>
+                          <section key={section.id} className={`admin-section-card tone-${section.tone}`}>
+            <div key="head" className="admin-section-header">
+              <div key="copy" className="admin-section-copy">
+                <span key="kicker" className="admin-section-kicker">
+                  {section.title}
+                </span>
+                <h4 key="title" className="admin-field-group-title">
+                  {section.title}
+                </h4>
+                <p key="desc" className="admin-section-description">
+                  {section.description}
+                </p>
+              </div>
+            </div>
+            <div key="grid" className="admin-form-section-grid">
+              {section.fields.map((field) =>
+                                      <div key={field.name} className={`admin-input-wrap${field.fullWidth ? " span-2" : ""}`}>
+                <label key="label" className="admin-input-label">
+                  {field.label}
+                </label>
+                {renderFieldControl(field)}
+                {field.helper
+                                              ? <span key="helper" className="admin-input-helper">
+                  {field.helper}
+                </span>
+                                              : null}
+              </div>
+                                    )}
+            </div>
+          </section>
                         )
-                      )
-                    )
-                  ]
-                )
-              )
-              .concat([
-                h(
-                  "div",
-                  {
-                    key: "actions",
-                    className: "admin-form-actions admin-submit-row"
-                  },
-                  [
-                    h(
-                      "button",
-                      {
-                        key: "submit",
-                        type: "submit",
-                        className: "btn btn-smart-primary"
-                      },
-                      editingVillage ? "Save Village Changes" : "Create Village Record"
-                    ),
-                    h(
-                      "button",
-                      {
-                        key: "reset",
-                        type: "button",
-                        className: "btn btn-outline-smart",
-                        onClick: resetForm
-                      },
-                      editingVillage ? "Cancel Edit" : "Reset"
-                    )
-                  ]
-                )
-              ])
-          )
-        ]),
-        h("div", { key: "side", className: "admin-side-stack" }, [
-          h("div", { key: "profile", className: "premium-card admin-side-card admin-profile-card" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "District Admin Profile"),
-            h("div", { key: "head", className: "admin-profile-head" }, [
-              h("div", { key: "avatar", className: "admin-profile-avatar" }, [
-                h("span", { key: "initials" }, (user?.name || "DA").split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase())
-              ]),
-              h("div", { key: "copy", className: "admin-profile-copy" }, [
-                h("h3", { key: "name", className: "table-title" }, user?.name || "District Admin"),
-                h("p", { key: "role", className: "section-description" }, user?.designation || "Smart Governance Officer")
-              ])
-            ]),
-            h("div", { key: "chips", className: "page-banner-chips admin-profile-chips" }, [
-              h("span", { key: "role", className: "page-chip" }, user?.role === "admin" ? "Administrator" : "User"),
-              h("span", { key: "state", className: "page-chip" }, user?.state || "India"),
-              h("span", { key: "scope", className: "page-chip" }, "Full site publishing")
-            ]),
-            h("div", { key: "authority", className: "admin-profile-grid" }, [
-              h("div", { key: "email", className: "admin-profile-metric" }, [
-                h("span", { key: "label", className: "admin-profile-label" }, "Email"),
-                h("strong", { key: "value" }, user?.email || "admin@smartvillage.in")
-              ]),
-              h("div", { key: "villages", className: "admin-profile-metric" }, [
-                h("span", { key: "label", className: "admin-profile-label" }, "Editable villages"),
-                h("strong", { key: "value" }, String(totalVillages))
-              ]),
-              h("div", { key: "site", className: "admin-profile-metric" }, [
-                h("span", { key: "label", className: "admin-profile-label" }, "Search sync"),
-                h("strong", { key: "value" }, "Live after save")
-              ]),
-              h("div", { key: "records", className: "admin-profile-metric" }, [
-                h("span", { key: "label", className: "admin-profile-label" }, "Current record"),
-                h("strong", { key: "value" }, editingVillage?.name || "New village draft")
-              ])
-            ])
-          ]),
-          h("div", { key: "brief", className: "premium-card admin-side-card admin-brief-card" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "What This Page Controls"),
-            h("h3", { key: "title", className: "table-title" }, "Admin impact map"),
-            h("div", { key: "items", className: "admin-note-list" }, [
-              h("div", { key: "n1", className: "admin-note-item" }, "Landing, detail, analytics, and growth modules consume these saved village values."),
-              h("div", { key: "n2", className: "admin-note-item" }, "Search dashboard intro, soil, water, waste, sensors, dairy, classrooms, and maps are now admin-managed."),
-              h("div", { key: "n3", className: "admin-note-item" }, "Use search tags and highlights to improve discoverability and presentation quality.")
-            ])
-          ]),
-          h("div", { key: "surfaces", className: "premium-card admin-side-card admin-surface-card" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "Whole Site Publishing"),
-            h("h3", { key: "title", className: "table-title" }, "Where this record will appear"),
-            h(
-              "p",
-              { key: "text", className: "section-description" },
-              "Save once here and the same record can power Search, landing cards, analytics, growth, and village detail views."
-            ),
-            h(
-              "div",
-              { key: "list", className: "admin-surface-list" },
-              publishSurfaces.map((surface) =>
-                h("div", { key: surface.key, className: "admin-surface-item" }, [
-                  h("div", { key: "copy", className: "admin-surface-copy" }, [
-                    h("strong", { key: "title" }, surface.title),
-                    h("span", { key: "note", className: "admin-surface-note" }, surface.note)
-                  ]),
-                  h("span", { key: "status", className: "admin-surface-state" }, surface.status)
-                ])
-              )
-            )
-          ]),
-          h("div", { key: "preview", className: "premium-card admin-side-card admin-preview-card" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "Live Site Preview"),
-            h("h3", { key: "title", className: "table-title" }, `${formState.name || "Selected Place"} preview`),
-            h(
-              "p",
-              { key: "text", className: "section-description" },
-              "These values are the same ones the Search selected-place dashboard will show after you save this record."
-            ),
-            h("div", { key: "intro", className: "admin-preview-intro" }, formState.searchDashboardIntro || formState.description || "Add a search dashboard intro from the form to preview it here."),
-            h(
-              "div",
-              { key: "moduleGrid", className: "admin-preview-module-grid" },
-              previewModules.map((module) =>
-                h("div", { key: module.key, className: "admin-preview-module" }, [
-                  h("span", { key: "source", className: "admin-preview-source" }, module.source),
-                  h("strong", { key: "title" }, module.title),
-                  h("span", { key: "value", className: "admin-preview-value" }, module.value)
-                ])
-              )
-            ),
-            h("div", { key: "cta", className: "admin-preview-footer" }, [
-              h("span", { key: "note", className: "small-label" }, "Example: edit Patna here, save it, then search Patna to see the updated dashboard.")
-            ])
-          ]),
-          h("div", { key: "visualCard", className: "premium-card admin-side-card" }, [
-            h("h3", { key: "title", className: "table-title" }, "Admin visual slot"),
-            h("div", { key: "image", className: "admin-image-slot public-image-frame" }, [
-              h("img", {
-                key: "visual",
-                src: "/images/admin/admin-monitoring.jpg",
-                alt: "Admin monitoring visual",
-                className: "public-image",
-                onError: (event) => {
-                  event.currentTarget.parentElement?.classList.add("is-missing");
-                }
-              }),
-              h(
-                "span",
-                { key: "note", className: "media-fallback" },
-                "Add /images/admin/admin-monitoring.jpg"
-              )
-            ])
-          ]),
-          h("div", { key: "tableCard", className: "premium-card section-table-card admin-table-card" }, [
-            h("h3", { key: "title", className: "table-title" }, "Managed villages"),
-            h(DataTable, {
-              key: "table",
-              records: sortedVillages,
-              columns: [
-                { key: "name", label: "Village" },
-                { key: "state", label: "State" },
-                { key: "areaName", label: "Area" },
-                {
-                  key: "growthIndex",
-                  label: "Growth",
-                  render: (record) => `${record.growthIndex}%`
-                },
-                {
-                  key: "cctvLive",
-                  label: "Live CCTV",
-                  render: (record) => getVillageCctvMetrics(record).live
-                },
-                {
-                  key: "actions",
-                  label: "Actions",
-                  render: (record) =>
-                    h("div", { className: "table-actions" }, [
-                      h(
-                        "button",
-                        {
-                          key: "edit",
-                          type: "button",
-                          className: "btn btn-sm btn-light",
-                          onClick: () => startEdit(record)
-                        },
-                        "Edit"
-                      ),
-                      h(
-                        "button",
-                        {
-                          key: "delete",
-                          type: "button",
-                          className: "btn btn-sm btn-outline-danger",
-                          onClick: () => handleDelete(record._id)
-                        },
-                        "Delete"
-                      )
-                    ])
-                }
-              ]
-            })
-          ])
-        ])
-      ])
-    ])
-  ]);
+                        .concat([
+                          <div key="actions" className="admin-form-actions admin-submit-row">
+            <button key="submit" type="submit" className="btn btn-smart-primary">
+              {editingVillage ? "Save Village Changes" : "Create Village Record"}
+            </button>
+            <button key="reset" type="button" className="btn btn-outline-smart" onClick={resetForm}>
+              {editingVillage ? "Cancel Edit" : "Reset"}
+            </button>
+          </div>
+                        ])}
+        </form>
+      </div>
+      <div key="side" className="admin-side-stack">
+        <div key="profile" className="premium-card admin-side-card admin-profile-card">
+          <span key="eyebrow" className="section-eyebrow">District Admin Profile</span>
+          <div key="head" className="admin-profile-head">
+            <div key="avatar" className="admin-profile-avatar">
+              <span key="initials">
+                {(user?.name || "DA").split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase()}
+              </span>
+            </div>
+            <div key="copy" className="admin-profile-copy">
+              <h3 key="name" className="table-title">
+                {user?.name || "District Admin"}
+              </h3>
+              <p key="role" className="section-description">
+                {user?.designation || "Smart Governance Officer"}
+              </p>
+            </div>
+          </div>
+          <div key="chips" className="page-banner-chips admin-profile-chips">
+            <span key="role" className="page-chip">
+              {user?.role === "admin" ? "Administrator" : "User"}
+            </span>
+            <span key="state" className="page-chip">
+              {user?.state || "India"}
+            </span>
+            <span key="scope" className="page-chip">Full site publishing</span>
+          </div>
+          <div key="authority" className="admin-profile-grid">
+            <div key="email" className="admin-profile-metric">
+              <span key="label" className="admin-profile-label">Email</span>
+              <strong key="value">
+                {user?.email || "admin@smartvillage.in"}
+              </strong>
+            </div>
+            <div key="villages" className="admin-profile-metric">
+              <span key="label" className="admin-profile-label">Editable villages</span>
+              <strong key="value">
+                {String(totalVillages)}
+              </strong>
+            </div>
+            <div key="site" className="admin-profile-metric">
+              <span key="label" className="admin-profile-label">Search sync</span>
+              <strong key="value">Live after save</strong>
+            </div>
+            <div key="records" className="admin-profile-metric">
+              <span key="label" className="admin-profile-label">Current record</span>
+              <strong key="value">
+                {editingVillage?.name || "New village draft"}
+              </strong>
+            </div>
+          </div>
+        </div>
+        <div key="brief" className="premium-card admin-side-card admin-brief-card">
+          <span key="eyebrow" className="section-eyebrow">What This Page Controls</span>
+          <h3 key="title" className="table-title">Admin impact map</h3>
+          <div key="items" className="admin-note-list">
+            <div key="n1" className="admin-note-item">Landing, detail, analytics, and growth modules consume these saved village values.</div>
+            <div key="n2" className="admin-note-item">Search dashboard intro, soil, water, waste, sensors, dairy, classrooms, and maps are now admin-managed.</div>
+            <div key="n3" className="admin-note-item">Use search tags and highlights to improve discoverability and presentation quality.</div>
+          </div>
+        </div>
+        <div key="surfaces" className="premium-card admin-side-card admin-surface-card">
+          <span key="eyebrow" className="section-eyebrow">Whole Site Publishing</span>
+          <h3 key="title" className="table-title">Where this record will appear</h3>
+          <p key="text" className="section-description">Save once here and the same record can power Search, landing cards, analytics, growth, and village detail views.</p>
+          <div key="list" className="admin-surface-list">
+            {publishSurfaces.map((surface) =>
+                            <div key={surface.key} className="admin-surface-item">
+              <div key="copy" className="admin-surface-copy">
+                <strong key="title">
+                  {surface.title}
+                </strong>
+                <span key="note" className="admin-surface-note">
+                  {surface.note}
+                </span>
+              </div>
+              <span key="status" className="admin-surface-state">
+                {surface.status}
+              </span>
+            </div>
+                          )}
+          </div>
+        </div>
+        <div key="preview" className="premium-card admin-side-card admin-preview-card">
+          <span key="eyebrow" className="section-eyebrow">Live Site Preview</span>
+          <h3 key="title" className="table-title">
+            {`${formState.name || "Selected Place"} preview`}
+          </h3>
+          <p key="text" className="section-description">These values are the same ones the Search selected-place dashboard will show after you save this record.</p>
+          <div key="intro" className="admin-preview-intro">
+            {formState.searchDashboardIntro || formState.description || "Add a search dashboard intro from the form to preview it here."}
+          </div>
+          <div key="moduleGrid" className="admin-preview-module-grid">
+            {previewModules.map((module) =>
+                            <div key={module.key} className="admin-preview-module">
+              <span key="source" className="admin-preview-source">
+                {module.source}
+              </span>
+              <strong key="title">
+                {module.title}
+              </strong>
+              <span key="value" className="admin-preview-value">
+                {module.value}
+              </span>
+            </div>
+                          )}
+          </div>
+          <div key="cta" className="admin-preview-footer">
+            <span key="note" className="small-label">Example: edit Patna here, save it, then search Patna to see the updated dashboard.</span>
+          </div>
+        </div>
+        <div key="visualCard" className="premium-card admin-side-card">
+          <h3 key="title" className="table-title">Admin visual slot</h3>
+          <div key="image" className="admin-image-slot public-image-frame">
+            <img key="visual" src="/images/admin/admin-monitoring.jpg" alt="Admin monitoring visual" className="public-image" onError={(event) => {
+                              event.currentTarget.parentElement?.classList.add("is-missing");
+                            }} />
+            <span key="note" className="media-fallback">Add /images/admin/admin-monitoring.jpg</span>
+          </div>
+        </div>
+        <div key="tableCard" className="premium-card section-table-card admin-table-card">
+          <h3 key="title" className="table-title">Managed villages</h3>
+          <DataTable key="table" records={sortedVillages} columns={[
+                          { key: "name", label: "Village" },
+                          { key: "state", label: "State" },
+                          { key: "areaName", label: "Area" },
+                          {
+                            key: "growthIndex",
+                            label: "Growth",
+                            render: (record) => `${record.growthIndex}%`
+                          },
+                          {
+                            key: "cctvLive",
+                            label: "Live CCTV",
+                            render: (record) => getVillageCctvMetrics(record).live
+                          },
+                          {
+                            key: "actions",
+                            label: "Actions",
+                            render: (record) =>
+                              <div className="table-actions">
+            <button key="edit" type="button" className="btn btn-sm btn-light" onClick={() => startEdit(record)}>Edit</button>
+            <button key="delete" type="button" className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(record._id)}>Delete</button>
+          </div>
+                          }
+                        ]} />
+        </div>
+      </div>
+    </div>
+  </section>
+</div>;
 };
 
 export default AdminEntryPage;

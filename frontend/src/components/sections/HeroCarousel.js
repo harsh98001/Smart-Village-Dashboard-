@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { h } from "../../utils/h";
-
 const slides = [
   {
     eyebrow: "Agriculture Growth",
@@ -72,53 +70,42 @@ const HeroCarousel = () => {
     };
   }, []);
 
-  return h("section", { className: "hero-carousel-section" }, [
-    h("div", { key: "container", className: "container" }, [
-      h(
-        "div",
-        {
-          key: "carousel",
-          className: "owl-carousel hero-carousel",
-          ref: carouselRef
-        },
-        slides.map((slide) =>
-          h("div", { key: slide.title, className: "hero-slide" }, [
-            h("div", { key: "content", className: "hero-slide-copy" }, [
-              h("span", { key: "eyebrow", className: "section-eyebrow" }, slide.eyebrow),
-              h("h1", { key: "title", className: "hero-title" }, slide.title),
-              h("p", { key: "text", className: "hero-text" }, slide.text),
-              h(
-                "button",
-                {
-                  key: "button",
-                  type: "button",
-                  className: "btn btn-smart-primary hero-button",
-                  onClick: () => navigate(slide.action.to)
-                },
-                slide.action.label
-              )
-            ]),
-            h("div", { key: "visual", className: "hero-slide-visual" }, [
-              h("div", { key: "glowOne", className: "hero-orb orb-one" }),
-              h("div", { key: "glowTwo", className: "hero-orb orb-two" }),
-              h("div", { key: "placeholder", className: "hero-image-placeholder hero-image-slot public-image-frame" }, [
-                h("img", {
-                  key: "image",
-                  src: slide.imageSrc,
-                  alt: slide.title,
-                  className: "hero-image-slot-image public-image",
-                  onError: (event) => {
-                    event.currentTarget.parentElement?.classList.add("is-missing");
-                  }
-                }),
-                h("span", { key: "note", className: "media-fallback" }, slide.imageNote)
-              ])
-            ])
-          ])
-        )
-      )
-    ])
-  ]);
+  return <section className="hero-carousel-section">
+  <div key="container" className="container">
+    <div key="carousel" className="owl-carousel hero-carousel" ref={carouselRef}>
+      {slides.map((slide) =>
+                <div key={slide.title} className="hero-slide">
+        <div key="content" className="hero-slide-copy">
+          <span key="eyebrow" className="section-eyebrow">
+            {slide.eyebrow}
+          </span>
+          <h1 key="title" className="hero-title">
+            {slide.title}
+          </h1>
+          <p key="text" className="hero-text">
+            {slide.text}
+          </p>
+          <button key="button" type="button" className="btn btn-smart-primary hero-button" onClick={() => navigate(slide.action.to)}>
+            {slide.action.label}
+          </button>
+        </div>
+        <div key="visual" className="hero-slide-visual">
+          <div key="glowOne" className="hero-orb orb-one" />
+          <div key="glowTwo" className="hero-orb orb-two" />
+          <div key="placeholder" className="hero-image-placeholder hero-image-slot public-image-frame">
+            <img key="image" src={slide.imageSrc} alt={slide.title} className="hero-image-slot-image public-image" onError={(event) => {
+                                event.currentTarget.parentElement?.classList.add("is-missing");
+                              }} />
+            <span key="note" className="media-fallback">
+              {slide.imageNote}
+            </span>
+          </div>
+        </div>
+      </div>
+              )}
+    </div>
+  </div>
+</section>;
 };
 
 export default HeroCarousel;

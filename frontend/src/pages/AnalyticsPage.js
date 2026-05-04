@@ -1,5 +1,4 @@
 import React from "react";
-import { h } from "../utils/h";
 import { useData } from "../context/DataContext";
 import PageBanner from "../components/layout/PageBanner";
 import StatCard from "../components/ui/StatCard";
@@ -106,18 +105,30 @@ const buildLightChartOptions = (overrides = {}) => ({
 });
 
 const renderAnalyticsSignal = (signal) =>
-  h("div", { key: signal.label, className: "command-signal-card analytics-signal-card" }, [
-    h("span", { key: "label", className: "command-signal-label" }, signal.label),
-    h("strong", { key: "value", className: "command-signal-value" }, signal.value),
-    h("p", { key: "note", className: "command-signal-note" }, signal.note)
-  ]);
+  <div key={signal.label} className="command-signal-card analytics-signal-card">
+  <span key="label" className="command-signal-label">
+    {signal.label}
+  </span>
+  <strong key="value" className="command-signal-value">
+    {signal.value}
+  </strong>
+  <p key="note" className="command-signal-note">
+    {signal.note}
+  </p>
+</div>;
 
 const renderVisualTile = (tile) =>
-  h("div", { key: tile.label, className: "visual-metric-tile" }, [
-    h("span", { key: "label", className: "visual-metric-label" }, tile.label),
-    h("strong", { key: "value", className: "visual-metric-value" }, tile.value),
-    h("span", { key: "note", className: "visual-metric-note" }, tile.note)
-  ]);
+  <div key={tile.label} className="visual-metric-tile">
+  <span key="label" className="visual-metric-label">
+    {tile.label}
+  </span>
+  <strong key="value" className="visual-metric-value">
+    {tile.value}
+  </strong>
+  <span key="note" className="visual-metric-note">
+    {tile.note}
+  </span>
+</div>;
 
 const AnalyticsPage = () => {
   const { overview } = useData();
@@ -534,243 +545,125 @@ const AnalyticsPage = () => {
     options: buildLightChartOptions()
   };
 
-  return h("div", null, [
-    h(PageBanner, {
-      key: "banner",
-      chips: [
-        "Fruit and vegetable prices",
-        "PM-KISAN, MGNREGA, PMKVY",
-        "Solar and e-education",
-        "Banks and ecommerce",
-        "Blinkit, Zomato, Zepto",
-        "Live AQI"
-      ]
-    }),
-    h(InsightMarquee, {
-      key: "marquee",
-      eyebrow: "Analytics Priorities",
-      items: analyticsMarqueeItems,
-      speed: "slow"
-    }),
-    h("section", { key: "body", className: "analytics-page-section" }, [
-      h("div", { key: "container", className: "container" }, [
-        h("div", { key: "hero", className: "intelligence-command-board analytics-command-board" }, [
-          h("div", { key: "copy", className: "command-copy" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "District market intelligence"),
-            h(
-              "h2",
-              { key: "title", className: "command-title" },
-              "Analytics now tracks market prices, flagship schemes, solar readiness, digital services, and retail reach in one command board"
-            ),
-            h(
-              "p",
-              { key: "description", className: "command-description" },
-              "The analytics layer now behaves like a district governance briefing deck. It links fruit and vegetable prices with PM-KISAN, MGNREGA, PMKVY, banking access, e-education, ecommerce, modern retail, and quick-commerce pilots so the page feels dense, useful, and interview-ready."
-            ),
-            h(
-              "div",
-              { key: "chips", className: "command-chip-row" },
-              [
-                "Mandi pulse",
-                "Beneficiary reach",
-                "Banking access",
-                "Solar institutions",
-                "E-education",
-                "Retail and quick-commerce"
-              ].map((chip) => h("span", { key: chip, className: "command-chip" }, chip))
-            ),
-            h(
-              "div",
-              { key: "signals", className: "command-signal-grid analytics-signal-grid" },
-              analyticsHeroSignals.map(renderAnalyticsSignal)
-            )
-          ]),
-          h("div", { key: "visual", className: "command-visual-shell" }, [
-            h("div", { key: "frame", className: "command-visual-frame analytics-visual-frame" }, [
-              h("img", {
-                key: "image",
-                src: "/images/analytics-reference.webp",
-                alt: "Analytics reference board",
-                className: "command-reference-image"
-              }),
-              h("div", { key: "panel1", className: "command-overlay-card overlay-top" }, [
-                h("span", { key: "label", className: "command-overlay-label" }, "Kapurthala mandi basket"),
-                h("strong", { key: "value", className: "command-overlay-value" }, formatCurrency(averageBasketPrice)),
-                h("p", { key: "text", className: "command-overlay-note" }, "Weighted reference basket across fruit and vegetable arrivals")
-              ]),
-              h("div", { key: "panel2", className: "command-overlay-card overlay-bottom-left" }, [
-                h("span", { key: "label", className: "command-overlay-label" }, "Scheme execution pulse"),
-                h("strong", { key: "value", className: "command-overlay-value" }, `${averageSchemeCoverage}%`),
-                h("p", { key: "text", className: "command-overlay-note" }, "Average active scheme reach across six flagship programmes")
-              ]),
-              h("div", { key: "panel3", className: "command-overlay-card overlay-bottom-right" }, [
-                h("span", { key: "label", className: "command-overlay-label" }, "Digital service stack"),
-                h("strong", { key: "value", className: "command-overlay-value" }, "Banks + ONDC + retail"),
-                h("p", { key: "text", className: "command-overlay-note" }, "Public delivery and private commerce signals in one layer")
-              ])
-            ])
-          ])
-        ]),
-        h(
-          "div",
-          { key: "stats", className: "stats-grid compact-grid intelligence-kpi-strip" },
-          analyticsSummaryCards.map((card) =>
-            h(StatCard, {
-              key: card.key,
-              icon: card.icon,
-              title: card.title,
-              value: card.value,
-              description: card.description,
-              formatter: card.formatter,
-              tone: card.tone
-            })
-          )
-        ),
-        h("div", { key: "charts", className: "intelligence-chart-grid" }, [
-          h(ChartCard, {
-            key: "pricePulse",
-            title: "Fruit and vegetable price pulse",
-            subtitle: "Reference prices across the monitored mandi basket",
-            config: pricePulseConfig
-          }),
-          h(ChartCard, {
-            key: "categorySpread",
-            title: "Basket composition",
-            subtitle: "Fruit basket versus vegetable basket average",
-            config: categorySpreadConfig
-          }),
-          h(ChartCard, {
-            key: "schemeCoverage",
-            title: "Flagship scheme coverage",
-            subtitle: "PM-KISAN, MGNREGA, PMKVY, PMAY-G, NRLM, Ayushman",
-            config: schemeCoverageConfig
-          }),
-          h(ChartCard, {
-            key: "serviceCoverage",
-            title: "Service access footprint",
-            subtitle: "Solar, education, banking, ecommerce, quick-commerce, and tele-health",
-            config: serviceCoverageConfig
-          })
-        ]),
-        h("div", { key: "visualBoards", className: "intelligence-double-grid visual-board-double-grid" }, [
-          h("section", { key: "marketBoard", className: "visual-graph-board" }, [
-            h("div", { key: "head", className: "intelligence-section-head" }, [
-              h("span", { key: "eyebrow", className: "section-eyebrow" }, "Market records"),
-              h("h3", { key: "title", className: "table-title" }, "Fruit and vegetable reference rates"),
-              h(
-                "p",
-                { key: "desc", className: "command-muted" },
-                "This area now reads like a chart board instead of a long table."
-              )
-            ]),
-            h("div", { key: "tiles", className: "visual-metric-row" }, marketTiles.map(renderVisualTile)),
-            h("div", { key: "graphs", className: "mini-graph-grid two-up" }, [
-              h(ChartCard, {
-                key: "marketWave",
-                title: "Basket wave",
-                subtitle: "Price motion across tracked items",
-                config: marketWaveConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              }),
-              h(ChartCard, {
-                key: "trendShift",
-                title: "Trend shift",
-                subtitle: "Upside and downside movement",
-                config: priceTrendConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              })
-            ])
-          ]),
-          h("section", { key: "schemeBoard", className: "visual-graph-board" }, [
-            h("div", { key: "head", className: "intelligence-section-head" }, [
-              h("span", { key: "eyebrow", className: "section-eyebrow" }, "Welfare and livelihoods"),
-              h("h3", { key: "title", className: "table-title" }, "Government scheme execution cards"),
-              h(
-                "p",
-                { key: "desc", className: "command-muted" },
-                "Coverage and scale now show up as briefing graphs instead of long card paragraphs."
-              )
-            ]),
-            h("div", { key: "tiles", className: "visual-metric-row" }, schemeTiles.map(renderVisualTile)),
-            h("div", { key: "graphs", className: "mini-graph-grid two-up" }, [
-              h(ChartCard, {
-                key: "schemeScale",
-                title: "Programme scale",
-                subtitle: "Relative execution volume by scheme",
-                config: schemeVolumeConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              }),
-              h(ChartCard, {
-                key: "schemeGap",
-                title: "Coverage vs gap",
-                subtitle: "Average coverage ring",
-                config: schemeGapConfig,
-                className: "compact-graph-card",
-                canvasHeight: 170
-              })
-            ])
-          ])
-        ]),
-        h("section", { key: "services", className: "intelligence-service-shell graph-service-shell" }, [
-          h("div", { key: "head", className: "intelligence-section-head" }, [
-            h("span", { key: "eyebrow", className: "section-eyebrow" }, "Commerce and service access"),
-            h("h3", { key: "title", className: "table-title" }, "Solar, e-education, banks, ecommerce, delivery, retail, and citizen services"),
-            h(
-              "p",
-              { key: "desc", className: "command-muted" },
-              "This section is now graph-led, so the service layer looks closer to a real dashboard screen."
-            )
-          ]),
-          h("div", { key: "tiles", className: "visual-metric-row service-tile-row" }, serviceTiles.map(renderVisualTile)),
-          h("div", { key: "graphs", className: "mini-graph-grid service-graph-grid" }, [
-            h(ChartCard, {
-              key: "serviceCluster",
-              title: "Service cluster intensity",
-              subtitle: "Scaled reach across major delivery channels",
-              config: serviceClusterConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            }),
-            h(ChartCard, {
-              key: "commerceSplit",
-              title: "Commerce split",
-              subtitle: "Finance, education, retail, and service mix",
-              config: commerceSplitConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            }),
-            h(ChartCard, {
-              key: "deliveryMix",
-              title: "Citizen delivery intensity",
-              subtitle: "How service access holds across the visible stack",
-              config: deliveryMixConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            }),
-            h(ChartCard, {
-              key: "digitalReach",
-              title: "Digital access buildout",
-              subtitle: "ONDC, quick-commerce, classrooms, and public desks",
-              config: digitalReachConfig,
-              className: "compact-graph-card",
-              canvasHeight: 180
-            })
-          ])
-        ]),
-        h(AirQualitySection, {
-          key: "aqi",
-          compact: true,
-          eyebrow: "Analytics AQI",
-          title: "Live AQI comparison now sits beside prices, schemes, and services for a fuller district analytics narrative",
-          description:
-            "Air-quality visibility keeps the analytics layer grounded in real environmental context while the rest of the page focuses on markets, benefits, and service readiness."
-        })
-      ])
-    ])
-  ]);
+  return <div>
+  <PageBanner key="banner" chips={[
+          "Fruit and vegetable prices",
+          "PM-KISAN, MGNREGA, PMKVY",
+          "Solar and e-education",
+          "Banks and ecommerce",
+          "Blinkit, Zomato, Zepto",
+          "Live AQI"
+        ]} />
+  <InsightMarquee key="marquee" eyebrow="Analytics Priorities" items={analyticsMarqueeItems} speed="slow" />
+  <section key="body" className="analytics-page-section">
+    <div key="container" className="container">
+      <div key="hero" className="intelligence-command-board analytics-command-board">
+        <div key="copy" className="command-copy">
+          <span key="eyebrow" className="section-eyebrow">District market intelligence</span>
+          <h2 key="title" className="command-title">Analytics now tracks market prices, flagship schemes, solar readiness, digital services, and retail reach in one command board</h2>
+          <p key="description" className="command-description">The analytics layer now behaves like a district governance briefing deck. It links fruit and vegetable prices with PM-KISAN, MGNREGA, PMKVY, banking access, e-education, ecommerce, modern retail, and quick-commerce pilots so the page feels dense, useful, and interview-ready.</p>
+          <div key="chips" className="command-chip-row">
+            {[
+                            "Mandi pulse",
+                            "Beneficiary reach",
+                            "Banking access",
+                            "Solar institutions",
+                            "E-education",
+                            "Retail and quick-commerce"
+                          ].map((chip) => <span key={chip} className="command-chip">
+              {chip}
+            </span>)}
+          </div>
+          <div key="signals" className="command-signal-grid analytics-signal-grid">
+            {analyticsHeroSignals.map(renderAnalyticsSignal)}
+          </div>
+        </div>
+        <div key="visual" className="command-visual-shell">
+          <div key="frame" className="command-visual-frame analytics-visual-frame">
+            <img key="image" src="/images/analytics-reference.webp" alt="Analytics reference board" className="command-reference-image" />
+            <div key="panel1" className="command-overlay-card overlay-top">
+              <span key="label" className="command-overlay-label">Kapurthala mandi basket</span>
+              <strong key="value" className="command-overlay-value">
+                {formatCurrency(averageBasketPrice)}
+              </strong>
+              <p key="text" className="command-overlay-note">Weighted reference basket across fruit and vegetable arrivals</p>
+            </div>
+            <div key="panel2" className="command-overlay-card overlay-bottom-left">
+              <span key="label" className="command-overlay-label">Scheme execution pulse</span>
+              <strong key="value" className="command-overlay-value">
+                {`${averageSchemeCoverage}%`}
+              </strong>
+              <p key="text" className="command-overlay-note">Average active scheme reach across six flagship programmes</p>
+            </div>
+            <div key="panel3" className="command-overlay-card overlay-bottom-right">
+              <span key="label" className="command-overlay-label">Digital service stack</span>
+              <strong key="value" className="command-overlay-value">Banks + ONDC + retail</strong>
+              <p key="text" className="command-overlay-note">Public delivery and private commerce signals in one layer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div key="stats" className="stats-grid compact-grid intelligence-kpi-strip">
+        {analyticsSummaryCards.map((card) =>
+                    <StatCard key={card.key} icon={card.icon} title={card.title} value={card.value} description={card.description} formatter={card.formatter} tone={card.tone} />
+                  )}
+      </div>
+      <div key="charts" className="intelligence-chart-grid">
+        <ChartCard key="pricePulse" title="Fruit and vegetable price pulse" subtitle="Reference prices across the monitored mandi basket" config={pricePulseConfig} />
+        <ChartCard key="categorySpread" title="Basket composition" subtitle="Fruit basket versus vegetable basket average" config={categorySpreadConfig} />
+        <ChartCard key="schemeCoverage" title="Flagship scheme coverage" subtitle="PM-KISAN, MGNREGA, PMKVY, PMAY-G, NRLM, Ayushman" config={schemeCoverageConfig} />
+        <ChartCard key="serviceCoverage" title="Service access footprint" subtitle="Solar, education, banking, ecommerce, quick-commerce, and tele-health" config={serviceCoverageConfig} />
+      </div>
+      <div key="visualBoards" className="intelligence-double-grid visual-board-double-grid">
+        <section key="marketBoard" className="visual-graph-board">
+          <div key="head" className="intelligence-section-head">
+            <span key="eyebrow" className="section-eyebrow">Market records</span>
+            <h3 key="title" className="table-title">Fruit and vegetable reference rates</h3>
+            <p key="desc" className="command-muted">This area now reads like a chart board instead of a long table.</p>
+          </div>
+          <div key="tiles" className="visual-metric-row">
+            {marketTiles.map(renderVisualTile)}
+          </div>
+          <div key="graphs" className="mini-graph-grid two-up">
+            <ChartCard key="marketWave" title="Basket wave" subtitle="Price motion across tracked items" config={marketWaveConfig} className="compact-graph-card" canvasHeight={170} />
+            <ChartCard key="trendShift" title="Trend shift" subtitle="Upside and downside movement" config={priceTrendConfig} className="compact-graph-card" canvasHeight={170} />
+          </div>
+        </section>
+        <section key="schemeBoard" className="visual-graph-board">
+          <div key="head" className="intelligence-section-head">
+            <span key="eyebrow" className="section-eyebrow">Welfare and livelihoods</span>
+            <h3 key="title" className="table-title">Government scheme execution cards</h3>
+            <p key="desc" className="command-muted">Coverage and scale now show up as briefing graphs instead of long card paragraphs.</p>
+          </div>
+          <div key="tiles" className="visual-metric-row">
+            {schemeTiles.map(renderVisualTile)}
+          </div>
+          <div key="graphs" className="mini-graph-grid two-up">
+            <ChartCard key="schemeScale" title="Programme scale" subtitle="Relative execution volume by scheme" config={schemeVolumeConfig} className="compact-graph-card" canvasHeight={170} />
+            <ChartCard key="schemeGap" title="Coverage vs gap" subtitle="Average coverage ring" config={schemeGapConfig} className="compact-graph-card" canvasHeight={170} />
+          </div>
+        </section>
+      </div>
+      <section key="services" className="intelligence-service-shell graph-service-shell">
+        <div key="head" className="intelligence-section-head">
+          <span key="eyebrow" className="section-eyebrow">Commerce and service access</span>
+          <h3 key="title" className="table-title">Solar, e-education, banks, ecommerce, delivery, retail, and citizen services</h3>
+          <p key="desc" className="command-muted">This section is now graph-led, so the service layer looks closer to a real dashboard screen.</p>
+        </div>
+        <div key="tiles" className="visual-metric-row service-tile-row">
+          {serviceTiles.map(renderVisualTile)}
+        </div>
+        <div key="graphs" className="mini-graph-grid service-graph-grid">
+          <ChartCard key="serviceCluster" title="Service cluster intensity" subtitle="Scaled reach across major delivery channels" config={serviceClusterConfig} className="compact-graph-card" canvasHeight={180} />
+          <ChartCard key="commerceSplit" title="Commerce split" subtitle="Finance, education, retail, and service mix" config={commerceSplitConfig} className="compact-graph-card" canvasHeight={180} />
+          <ChartCard key="deliveryMix" title="Citizen delivery intensity" subtitle="How service access holds across the visible stack" config={deliveryMixConfig} className="compact-graph-card" canvasHeight={180} />
+          <ChartCard key="digitalReach" title="Digital access buildout" subtitle="ONDC, quick-commerce, classrooms, and public desks" config={digitalReachConfig} className="compact-graph-card" canvasHeight={180} />
+        </div>
+      </section>
+      <AirQualitySection key="aqi" compact eyebrow="Analytics AQI" title="Live AQI comparison now sits beside prices, schemes, and services for a fuller district analytics narrative" description="Air-quality visibility keeps the analytics layer grounded in real environmental context while the rest of the page focuses on markets, benefits, and service readiness." />
+    </div>
+  </section>
+</div>;
 };
 
 export default AnalyticsPage;

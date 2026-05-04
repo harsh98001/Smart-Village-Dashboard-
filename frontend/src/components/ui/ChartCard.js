@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
-import { h } from "../../utils/h";
-
 const ChartCard = ({ title, subtitle, config, className = "", canvasHeight = 220 }) => {
   const canvasRef = useRef(null);
 
@@ -17,40 +15,19 @@ const ChartCard = ({ title, subtitle, config, className = "", canvasHeight = 220
     };
   }, [config]);
 
-  return h("div", { className: ["chart-card", className].filter(Boolean).join(" ") }, [
-    h(
-      "div",
-      {
-        key: "header",
-        className: "chart-card-header"
-      },
-      [
-        h(
-          "h3",
-          {
-            key: "title",
-            className: "chart-card-title"
-          },
-          title
-        ),
-        subtitle
-          ? h(
-              "span",
-              {
-                key: "subtitle",
-                className: "chart-card-subtitle"
-              },
-              subtitle
-            )
-          : null
-      ]
-    ),
-    h("canvas", {
-      key: "canvas",
-      ref: canvasRef,
-      height: canvasHeight
-    })
-  ]);
+  return <div className={["chart-card", className].filter(Boolean).join(" ")}>
+  <div key="header" className="chart-card-header">
+    <h3 key="title" className="chart-card-title">
+      {title}
+    </h3>
+    {subtitle
+              ? <span key="subtitle" className="chart-card-subtitle">
+      {subtitle}
+    </span>
+              : null}
+  </div>
+  <canvas key="canvas" ref={canvasRef} height={canvasHeight} />
+</div>;
 };
 
 export default ChartCard;

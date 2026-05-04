@@ -1,46 +1,24 @@
 import React from "react";
-import { h } from "../../utils/h";
 import { useToast } from "../../context/ToastContext";
 
 const ToastStack = () => {
   const { toasts, removeToast } = useToast();
 
-  return h(
-    "div",
-    { className: "toast-stack" },
-    toasts.map((toast) =>
-      h(
-        "div",
-        {
-          key: toast.id,
-          className: `toast-item toast-${toast.variant}`
-        },
-        [
-          h(
-            "div",
-            {
-              key: "content",
-              className: "toast-content"
-            },
-            [
-              h("strong", { key: "title" }, toast.title),
-              h("p", { key: "message" }, toast.message)
-            ]
-          ),
-          h(
-            "button",
-            {
-              key: "button",
-              type: "button",
-              className: "toast-close",
-              onClick: () => removeToast(toast.id)
-            },
-            "×"
-          )
-        ]
-      )
-    )
-  );
+  return <div className="toast-stack">
+  {toasts.map((toast) =>
+        <div key={toast.id} className={`toast-item toast-${toast.variant}`}>
+    <div key="content" className="toast-content">
+      <strong key="title">
+        {toast.title}
+      </strong>
+      <p key="message">
+        {toast.message}
+      </p>
+    </div>
+    <button key="button" type="button" className="toast-close" onClick={() => removeToast(toast.id)}>×</button>
+  </div>
+      )}
+</div>;
 };
 
 export default ToastStack;

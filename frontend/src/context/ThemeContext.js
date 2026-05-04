@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { h } from "../utils/h";
-
 const ThemeContext = React.createContext(null);
 
 export const ThemeProvider = ({ children }) => {
@@ -17,17 +15,13 @@ export const ThemeProvider = ({ children }) => {
     setTheme((currentTheme) => (currentTheme === "light" ? "dark" : "light"));
   };
 
-  return h(
-    ThemeContext.Provider,
-    {
-      value: {
+  return <ThemeContext.Provider value={{
         theme,
         setTheme,
         toggleTheme
-      }
-    },
-    children
-  );
+      }}>
+  {children}
+</ThemeContext.Provider>;
 };
 
 export const useTheme = () => useContext(ThemeContext);

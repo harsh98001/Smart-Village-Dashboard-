@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { h } from "../utils/h";
 import { useAuth } from "../context/AuthContext";
 import { useData } from "../context/DataContext";
 import { useToast } from "../context/ToastContext";
@@ -44,98 +43,57 @@ const NotificationsPage = () => {
     }
   };
 
-  return h("div", null, [
-    h(PageBanner, { key: "banner", chips: ["Alerts", "Broadcasts", "Toasts"] }),
-    h("section", { key: "body", className: "notifications-page-section" }, [
-      h("div", { key: "container", className: "container dashboard-split-grid" }, [
-        h("div", { key: "feed", className: "premium-card notification-feed-card" }, [
-          h("h3", { key: "title" }, "Live updates and alerts"),
-          h(
-            "div",
-            { key: "list", className: "notification-feed" },
-            notifications.map((notification) =>
-              h("article", { key: notification._id, className: "notification-card-item" }, [
-                h("div", { key: "header", className: "notification-card-top" }, [
-                  h("span", { key: "type", className: `pill-badge ${notification.type}` }, notification.type),
-                  h("span", { key: "date", className: "small-label" }, formatDate(notification.createdAt))
-                ]),
-                h("strong", { key: "title" }, notification.title),
-                h("p", { key: "message" }, notification.message),
-                isAdmin
-                  ? h(
-                      "button",
-                      {
-                        key: "delete",
-                        type: "button",
-                        className: "btn btn-sm btn-outline-danger",
-                        onClick: () => deleteNotification(notification._id)
-                      },
-                      "Delete"
-                    )
-                  : null
-              ])
-            )
-          )
-        ]),
-        isAdmin
-          ? h("div", { key: "form", className: "premium-card notification-form-card" }, [
-              h("h3", { key: "title" }, "Admin broadcast panel"),
-              h(
-                "form",
-                {
-                  key: "formContent",
-                  className: "admin-form-grid",
-                  onSubmit: submitNotification
-                },
-                [
-                  h("input", {
-                    key: "title",
-                    className: "form-control",
-                    placeholder: "Notification title",
-                    value: formState.title,
-                    onChange: (event) =>
-                      setFormState({ ...formState, title: event.target.value })
-                  }),
-                  h("textarea", {
-                    key: "message",
-                    className: "form-control",
-                    placeholder: "Broadcast message",
-                    rows: 5,
-                    value: formState.message,
-                    onChange: (event) =>
-                      setFormState({ ...formState, message: event.target.value })
-                  }),
-                  h(
-                    "select",
-                    {
-                      key: "type",
-                      className: "form-select",
-                      value: formState.type,
-                      onChange: (event) =>
-                        setFormState({ ...formState, type: event.target.value })
-                    },
-                    [
-                      h("option", { key: "broadcast", value: "broadcast" }, "Broadcast"),
-                      h("option", { key: "alert", value: "alert" }, "Alert"),
-                      h("option", { key: "update", value: "update" }, "Update")
-                    ]
-                  ),
-                  h(
-                    "button",
-                    {
-                      key: "submit",
-                      type: "submit",
-                      className: "btn btn-smart-primary"
-                    },
-                    "Publish Notification"
-                  )
-                ]
-              )
-            ])
-          : null
-      ])
-    ])
-  ]);
+  return <div>
+  <PageBanner key="banner" chips={["Alerts", "Broadcasts", "Toasts"]} />
+  <section key="body" className="notifications-page-section">
+    <div key="container" className="container dashboard-split-grid">
+      <div key="feed" className="premium-card notification-feed-card">
+        <h3 key="title">Live updates and alerts</h3>
+        <div key="list" className="notification-feed">
+          {notifications.map((notification) =>
+                        <article key={notification._id} className="notification-card-item">
+            <div key="header" className="notification-card-top">
+              <span key="type" className={`pill-badge ${notification.type}`}>
+                {notification.type}
+              </span>
+              <span key="date" className="small-label">
+                {formatDate(notification.createdAt)}
+              </span>
+            </div>
+            <strong key="title">
+              {notification.title}
+            </strong>
+            <p key="message">
+              {notification.message}
+            </p>
+            {isAdmin
+                              ? <button key="delete" type="button" className="btn btn-sm btn-outline-danger" onClick={() => deleteNotification(notification._id)}>Delete</button>
+                              : null}
+          </article>
+                      )}
+        </div>
+      </div>
+      {isAdmin
+                ? <div key="form" className="premium-card notification-form-card">
+        <h3 key="title">Admin broadcast panel</h3>
+        <form key="formContent" className="admin-form-grid" onSubmit={submitNotification}>
+          <input key="title" className="form-control" placeholder="Notification title" value={formState.title} onChange={(event) =>
+                                setFormState({ ...formState, title: event.target.value })} />
+          <textarea key="message" className="form-control" placeholder="Broadcast message" rows={5} value={formState.message} onChange={(event) =>
+                                setFormState({ ...formState, message: event.target.value })} />
+          <select key="type" className="form-select" value={formState.type} onChange={(event) =>
+                                  setFormState({ ...formState, type: event.target.value })}>
+            <option key="broadcast" value="broadcast">Broadcast</option>
+            <option key="alert" value="alert">Alert</option>
+            <option key="update" value="update">Update</option>
+          </select>
+          <button key="submit" type="submit" className="btn btn-smart-primary">Publish Notification</button>
+        </form>
+      </div>
+                : null}
+    </div>
+  </section>
+</div>;
 };
 
 export default NotificationsPage;

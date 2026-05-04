@@ -2,6 +2,19 @@ const { defineConfig } = require("vite");
 const path = require("path");
 
 module.exports = defineConfig({
+  esbuild: {
+    loader: "jsx",
+    include: /src\/.*\.js$/,
+    exclude: [],
+    jsx: "automatic"
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        ".js": "jsx"
+      }
+    }
+  },
   root: path.resolve(__dirname),
   server: {
     port: 5173,
