@@ -883,3 +883,7 @@ const AdminEntryPage = () => {
 };
 
 export default AdminEntryPage;
+
+
+
+// This code defines an `AdminEntryPage` component for a village governance application. It provides a form-based interface for administrators to create and edit village records, which include various fields related to identity, utilities, development, operations, and search dashboard content. The page also features an overview of managed villages, a live preview of how the data will appear on the search dashboard, and a table listing all existing village records with edit and delete options. The component uses React hooks for state management and relies on context providers for authentication, data handling, and toast notifications.
