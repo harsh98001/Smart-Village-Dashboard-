@@ -54,6 +54,8 @@ const SearchFilterPage = () => {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const timeoutId = setTimeout(async () => {
       setLoading(true);
 
@@ -74,7 +76,10 @@ const SearchFilterPage = () => {
           params.type = filters.resultType;
         }
 
-        const response = await apiClient.get("/locations/search", { params });
+        const response = await apiClient.get("/locations/search", {
+          params,
+          signal: controller.signal
+        });
         const nextResults = response.data?.results || [];
 
         setResults(nextResults);
@@ -86,7 +91,11 @@ const SearchFilterPage = () => {
               ? "Real place search is active and blended with the official India directory."
               : "Showing the official India state-capital and featured-city directory.")
         });
-      } catch (_error) {
+      } catch (error) {
+        if (error.name === "CanceledError" || error.code === "ERR_CANCELED") {
+          return;
+        }
+
         setResults([]);
         setMeta({
           usedLiveResults: false,
@@ -97,7 +106,10 @@ const SearchFilterPage = () => {
       }
     }, search.trim() ? 280 : 0);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [search, filters.state, filters.resultType]);
 
   useEffect(() => {
@@ -146,7 +158,7 @@ const SearchFilterPage = () => {
       return;
     }
 
-    let cancelled = false;
+    const controller = new AbortController();
 
     const loadEnvironment = async () => {
       setEnvironment({
@@ -159,10 +171,12 @@ const SearchFilterPage = () => {
       try {
         const [weatherResponse, aqiResponse] = await Promise.all([
           fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=auto`
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=auto`,
+            { signal: controller.signal }
           ),
           fetch(
-            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${latitude}&longitude=${longitude}&current=us_aqi,pm2_5,pm10,nitrogen_dioxide,ozone&timezone=auto`
+            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${latitude}&longitude=${longitude}&current=us_aqi,pm2_5,pm10,nitrogen_dioxide,ozone&timezone=auto`,
+            { signal: controller.signal }
           )
         ]);
 
@@ -175,7 +189,7 @@ const SearchFilterPage = () => {
           aqiResponse.json()
         ]);
 
-        if (!cancelled) {
+        if (!controller.signal.aborted) {
           setEnvironment({
             loading: false,
             weather: weatherData,
@@ -184,7 +198,7 @@ const SearchFilterPage = () => {
           });
         }
       } catch (_error) {
-        if (!cancelled) {
+        if (!controller.signal.aborted) {
           setEnvironment({
             loading: false,
             weather: null,
@@ -198,7 +212,7 @@ const SearchFilterPage = () => {
     loadEnvironment();
 
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, [activeLocation]);
 

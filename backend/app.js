@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 
 const authRoutes = require("./routes/authRoutes");
 const villageRoutes = require("./routes/villageRoutes");
@@ -12,10 +14,22 @@ const assistantRoutes = require("./routes/assistantRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
+const clientBuildPath = path.resolve(__dirname, "../frontend/dist");
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true
   })
 );
@@ -38,6 +52,15 @@ app.use("/api/locations", locationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/assistant", assistantRoutes);
+
+if (process.env.NODE_ENV === "production" && fs.existsSync(clientBuildPath)) {
+  app.use(express.static(clientBuildPath));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(clientBuildPath, "index.html"));
+  });
+} else if (process.env.NODE_ENV === "production") {
+  console.warn(`Frontend build not found at ${clientBuildPath}. API-only mode is active.`);
+}
 
 app.use(notFound);
 app.use(errorHandler);

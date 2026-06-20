@@ -67,13 +67,19 @@ const AirQualitySection = ({
           })
         );
 
-        setReadings(responses);
-        setError("");
+        if (!controller.signal.aborted) {
+          setReadings(responses);
+          setError("");
+        }
       } catch (_error) {
-        setReadings(fallbackAirQualityReadings);
-        setError("Live AQI could not be refreshed, so fallback values are shown.");
+        if (!controller.signal.aborted) {
+          setReadings(fallbackAirQualityReadings);
+          setError("Live AQI could not be refreshed, so fallback values are shown.");
+        }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 

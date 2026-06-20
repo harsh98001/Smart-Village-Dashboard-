@@ -38,7 +38,7 @@ const createFallbackState = (regionLabel) => ({
   regionLabel,
   sourceLabel: "Standby weather profile",
   updatedLabel: "Refreshing",
-  currentDateLabel: "Friday, 1:00 am",
+  currentDateLabel: formatCurrentDateLine(new Date()),
   current: {
     temperature_2m: 25,
     relative_humidity_2m: 46,
@@ -183,14 +183,15 @@ const WeatherSpotlight = ({
   const [weatherState, setWeatherState] = useState(createFallbackState(regionLabel));
 
   useEffect(() => {
-    let ignore = false;
+    const controller = new AbortController();
 
     const loadWeather = async () => {
       try {
         const geocodingResponse = await fetch(
           `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
             regionName
-          )}&count=8&language=en&format=json&countryCode=${countryCode}`
+          )}&count=8&language=en&format=json&countryCode=${countryCode}`,
+          { signal: controller.signal }
         );
 
         if (!geocodingResponse.ok) {
@@ -209,7 +210,8 @@ const WeatherSpotlight = ({
         }
 
         const forecastResponse = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${locationMatch.latitude}&longitude=${locationMatch.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,is_day,precipitation,cloud_cover&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=6&timezone=auto`
+          `https://api.open-meteo.com/v1/forecast?latitude=${locationMatch.latitude}&longitude=${locationMatch.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code,is_day,precipitation,cloud_cover&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=6&timezone=auto`,
+          { signal: controller.signal }
         );
 
         if (!forecastResponse.ok) {
@@ -242,7 +244,7 @@ const WeatherSpotlight = ({
             wind_speed_10m: forecastData.hourly.wind_speed_10m?.[currentHourIndex + index]
           }));
 
-        if (!ignore) {
+        if (!controller.signal.aborted) {
           setWeatherState({
             loading: false,
             regionLabel: `${locationMatch.name}, ${locationMatch.admin1 || regionState} ${locationMatch.postcode || ""}`.trim(),
@@ -256,7 +258,7 @@ const WeatherSpotlight = ({
           });
         }
       } catch (_error) {
-        if (!ignore) {
+        if (!controller.signal.aborted) {
           setWeatherState((current) => ({
             ...current,
             loading: false,
@@ -271,7 +273,7 @@ const WeatherSpotlight = ({
     loadWeather();
 
     return () => {
-      ignore = true;
+      controller.abort();
     };
   }, [countryCode, regionName, regionState]);
 
