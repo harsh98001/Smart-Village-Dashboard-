@@ -46,6 +46,7 @@ const ContactPage = () => {
   const [grievanceState, setGrievanceState] = useState(createEmptyGrievanceState());
   const [grievances, setGrievances] = useState([]);
   const [uploadKey, setUploadKey] = useState(0);
+  const [isSubmittingMessage, setIsSubmittingMessage] = useState(false);
   const [isSubmittingGrievance, setIsSubmittingGrievance] = useState(false);
 
   useEffect(() => {
@@ -75,14 +76,27 @@ const ContactPage = () => {
     localStorage.setItem(grievanceStorageKey, JSON.stringify(grievances));
   }, [grievances]);
 
-  const submitForm = (event) => {
+  const submitForm = async (event) => {
     event.preventDefault();
-    pushToast({
-      title: "Message received",
-      message: "The contact request has been captured in the interface flow.",
-      variant: "success"
-    });
-    setFormState({ name: "", email: "", message: "" });
+    setIsSubmittingMessage(true);
+
+    try {
+      await apiClient.post("/contact-messages", formState);
+      pushToast({
+        title: "Message saved",
+        message: "The contact request has been saved to MongoDB Atlas.",
+        variant: "success"
+      });
+      setFormState({ name: "", email: "", message: "" });
+    } catch (error) {
+      pushToast({
+        title: "Message not saved",
+        message: error.response?.data?.message || "Please check the form and try again.",
+        variant: "error"
+      });
+    } finally {
+      setIsSubmittingMessage(false);
+    }
   };
 
   const submitGrievance = async (event) => {
@@ -145,7 +159,9 @@ const ContactPage = () => {
             <input key="name" className="form-control contact-form-field" placeholder="Name" value={formState.name} onChange={(event) => setFormState({ ...formState, name: event.target.value })} />
             <input key="email" className="form-control contact-form-field" type="email" placeholder="Email" value={formState.email} onChange={(event) => setFormState({ ...formState, email: event.target.value })} />
             <textarea key="message" className="form-control contact-form-field" rows={5} placeholder="How can we help?" value={formState.message} onChange={(event) => setFormState({ ...formState, message: event.target.value })} />
-            <button key="submit" type="submit" className="btn btn-smart-primary">Send message</button>
+            <button key="submit" type="submit" className="btn btn-smart-primary" disabled={isSubmittingMessage}>
+              {isSubmittingMessage ? "Saving message..." : "Send message"}
+            </button>
           </form>
         </div>
       </div>

@@ -1,4 +1,5 @@
 const Grievance = require("../models/Grievance");
+const { writeAuditLog } = require("../utils/auditLogger");
 
 const createGrievanceId = () =>
   `GR-${new Date().toISOString().slice(2, 10).replace(/-/g, "")}-${String(Date.now()).slice(-5)}`;
@@ -65,6 +66,19 @@ const createGrievance = async (req, res, next) => {
       pincode,
       description,
       attachmentName: attachmentName || ""
+    });
+
+    await writeAuditLog({
+      action: "grievance_created",
+      actorEmail: "",
+      targetType: "Grievance",
+      targetId: grievance._id,
+      details: {
+        grievanceId: grievance.grievanceId,
+        issueType,
+        pincode,
+        attachmentName: attachmentName || ""
+      }
     });
 
     res.status(201).json({

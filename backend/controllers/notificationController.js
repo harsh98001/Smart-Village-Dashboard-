@@ -1,4 +1,5 @@
 const Notification = require("../models/Notification");
+const { writeAuditLog } = require("../utils/auditLogger");
 
 const getNotifications = async (_req, res, next) => {
   try {
@@ -24,6 +25,19 @@ const createNotification = async (req, res, next) => {
 
     const populated = await notification.populate("createdBy", "name role");
 
+    await writeAuditLog({
+      action: "notification_created",
+      actor: req.user,
+      targetType: "Notification",
+      targetId: notification._id,
+      details: {
+        title: notification.title,
+        type: notification.type,
+        priority: notification.priority,
+        audience: notification.audience
+      }
+    });
+
     res.status(201).json({
       success: true,
       message: "Notification published successfully",
@@ -43,7 +57,22 @@ const deleteNotification = async (req, res, next) => {
       throw new Error("Notification not found");
     }
 
+    const auditDetails = {
+      title: notification.title,
+      type: notification.type,
+      priority: notification.priority,
+      audience: notification.audience
+    };
+
     await notification.deleteOne();
+
+    await writeAuditLog({
+      action: "notification_deleted",
+      actor: req.user,
+      targetType: "Notification",
+      targetId: req.params.id,
+      details: auditDetails
+    });
 
     res.json({
       success: true,
@@ -59,4 +88,3 @@ module.exports = {
   createNotification,
   deleteNotification
 };
-

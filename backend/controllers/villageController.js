@@ -1,4 +1,5 @@
 const Village = require("../models/Village");
+const { writeAuditLog } = require("../utils/auditLogger");
 
 const getVillages = async (req, res, next) => {
   try {
@@ -86,6 +87,17 @@ const createVillage = async (req, res, next) => {
 
     const village = await Village.create(payload);
 
+    await writeAuditLog({
+      action: "village_created",
+      actor: req.user,
+      targetType: "Village",
+      targetId: village._id,
+      details: {
+        name: village.name,
+        state: village.state
+      }
+    });
+
     res.status(201).json({
       success: true,
       message: "Village created successfully",
@@ -111,6 +123,18 @@ const updateVillage = async (req, res, next) => {
 
     await village.save();
 
+    await writeAuditLog({
+      action: "village_updated",
+      actor: req.user,
+      targetType: "Village",
+      targetId: village._id,
+      details: {
+        name: village.name,
+        state: village.state,
+        updatedFields: Object.keys(req.body || {})
+      }
+    });
+
     res.json({
       success: true,
       message: "Village updated successfully",
@@ -130,7 +154,20 @@ const deleteVillage = async (req, res, next) => {
       throw new Error("Village not found");
     }
 
+    const auditDetails = {
+      name: village.name,
+      state: village.state
+    };
+
     await village.deleteOne();
+
+    await writeAuditLog({
+      action: "village_deleted",
+      actor: req.user,
+      targetType: "Village",
+      targetId: req.params.id,
+      details: auditDetails
+    });
 
     res.json({
       success: true,

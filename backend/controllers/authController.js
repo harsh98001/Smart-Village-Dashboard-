@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { writeAuditLog } = require("../utils/auditLogger");
 
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET || "smart-village-secret", {
@@ -43,6 +44,18 @@ const signup = async (req, res, next) => {
         (role === "admin" ? "District Operations Lead" : "Community Observer")
     });
 
+    await writeAuditLog({
+      action: "user_signup",
+      actor: user,
+      targetType: "User",
+      targetId: user._id,
+      details: {
+        role: user.role,
+        state: user.state,
+        designation: user.designation
+      }
+    });
+
     res.status(201).json({
       success: true,
       message: "Account created successfully",
@@ -72,6 +85,17 @@ const login = async (req, res, next) => {
     user.lastLoginAt = new Date();
     await user.save();
 
+    await writeAuditLog({
+      action: "user_login",
+      actor: user,
+      targetType: "User",
+      targetId: user._id,
+      details: {
+        role: user.role,
+        state: user.state
+      }
+    });
+
     res.json({
       success: true,
       message: "Login successful",
@@ -99,4 +123,3 @@ module.exports = {
   login,
   getProfile
 };
-

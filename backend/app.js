@@ -12,6 +12,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const assistantRoutes = require("./routes/assistantRoutes");
 const grievanceRoutes = require("./routes/grievanceRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
@@ -54,6 +55,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/assistant", assistantRoutes);
 app.use("/api/grievances", grievanceRoutes);
+app.use("/api/contact-messages", contactRoutes);
 
 if (process.env.NODE_ENV === "production" && fs.existsSync(clientBuildPath)) {
   app.use(express.static(clientBuildPath));
