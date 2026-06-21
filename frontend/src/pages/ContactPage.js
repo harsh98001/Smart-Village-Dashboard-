@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import apiClient from "../api/client";
 import { useToast } from "../context/ToastContext";
 import PageBanner from "../components/layout/PageBanner";
 
@@ -45,9 +46,29 @@ const ContactPage = () => {
   const [grievanceState, setGrievanceState] = useState(createEmptyGrievanceState());
   const [grievances, setGrievances] = useState([]);
   const [uploadKey, setUploadKey] = useState(0);
+  const [isSubmittingGrievance, setIsSubmittingGrievance] = useState(false);
 
   useEffect(() => {
-    setGrievances(readStoredGrievances());
+    let ignore = false;
+
+    const loadGrievances = async () => {
+      try {
+        const response = await apiClient.get("/grievances");
+        if (!ignore) {
+          setGrievances(response.data?.grievances || []);
+        }
+      } catch (_error) {
+        if (!ignore) {
+          setGrievances(readStoredGrievances());
+        }
+      }
+    };
+
+    loadGrievances();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -64,31 +85,31 @@ const ContactPage = () => {
     setFormState({ name: "", email: "", message: "" });
   };
 
-  const submitGrievance = (event) => {
+  const submitGrievance = async (event) => {
     event.preventDefault();
+    setIsSubmittingGrievance(true);
 
-    const grievanceId = `GR-${String(Date.now()).slice(-8)}`;
-    const submission = {
-      ...grievanceState,
-      id: grievanceId,
-      submittedAt: new Date().toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      }),
-      status: "Filed"
-    };
+    try {
+      const response = await apiClient.post("/grievances", grievanceState);
+      const submission = response.data?.grievance;
 
-    setGrievances([submission, ...grievances].slice(0, 6));
-    pushToast({
-      title: "Grievance filed",
-      message: `${grievanceId} has been created for ${grievanceState.issueType.toLowerCase()}.`,
-      variant: "success"
-    });
-    setGrievanceState(createEmptyGrievanceState());
-    setUploadKey((current) => current + 1);
+      setGrievances([submission, ...grievances].filter(Boolean).slice(0, 6));
+      pushToast({
+        title: "Grievance filed",
+        message: `${submission.id} has been saved to MongoDB Atlas.`,
+        variant: "success"
+      });
+      setGrievanceState(createEmptyGrievanceState());
+      setUploadKey((current) => current + 1);
+    } catch (error) {
+      pushToast({
+        title: "Grievance not saved",
+        message: error.response?.data?.message || "Please check the form and try again.",
+        variant: "error"
+      });
+    } finally {
+      setIsSubmittingGrievance(false);
+    }
   };
 
   return <div>
@@ -182,7 +203,13 @@ const ContactPage = () => {
                     {`${item.name} - ${item.pincode}`}
                   </span>
                   <span key="id" className="grievance-recent-meta">
-                    {`${item.id} - ${item.submittedAt}`}
+                    {`${item.id} - ${new Date(item.submittedAt).toLocaleString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}`}
                   </span>
                 </div>
                                       )}
@@ -245,7 +272,9 @@ const ContactPage = () => {
                   </span>
                 </div>
               </div>
-              <button key="submit" type="submit" className="btn btn-smart-primary grievance-submit-button grievance-field-wide">File grievance</button>
+              <button key="submit" type="submit" className="btn btn-smart-primary grievance-submit-button grievance-field-wide" disabled={isSubmittingGrievance}>
+                {isSubmittingGrievance ? "Saving grievance..." : "File grievance"}
+              </button>
             </form>
           </div>
         </div>
