@@ -1,31 +1,53 @@
+const defaultKeywords = [
+  "smart village dashboard",
+  "rural governance platform",
+  "village development analytics",
+  "digital India rural dashboard",
+  "panchayat data management",
+  "citizen grievance system",
+  "real time village data"
+];
+
 const pageMetaMap = {
   "/": {
     key: "landing",
     title: "Smart Village Intelligence Network",
     eyebrow: "National Rural Governance Platform",
     description:
-      "A premium, data-rich command center for village analytics, sector health, and long-term smart growth planning."
+      "A premium, data-rich command center for village analytics, sector health, and long-term smart growth planning.",
+    seoDescription:
+      "Smart Village Dashboard for rural governance, village analytics, citizen grievance tracking, live AQI, water, agriculture, health, education, and infrastructure insights.",
+    keywords: [
+      "smart village dashboard",
+      "rural governance dashboard",
+      "village analytics platform",
+      "smart village project",
+      "digital village monitoring"
+    ]
   },
   "/dashboard": {
     key: "dashboard",
     title: "Home Dashboard",
     eyebrow: "Unified Command Center",
     description:
-      "Monitor national-level development signals, compare villages, and follow live governance updates."
+      "Monitor national-level development signals, compare villages, and follow live governance updates.",
+    keywords: ["village dashboard", "governance command center", "rural development data"]
   },
   "/analytics": {
     key: "analytics",
     title: "Analytics",
     eyebrow: "Evidence-Based Decision Support",
     description:
-      "Cross-sector charts and performance views for growth, literacy, water, infrastructure, and services."
+      "Cross-sector charts and performance views for growth, literacy, water, infrastructure, and services.",
+    keywords: ["rural analytics", "village performance charts", "development indicators"]
   },
   "/growth": {
     key: "growth",
     title: "Growth",
     eyebrow: "Progress Acceleration",
     description:
-      "Review progress drivers, sustainability indicators, and village readiness for the next phase of development."
+      "Review progress drivers, sustainability indicators, and village readiness for the next phase of development.",
+    keywords: ["village growth", "rural development trends", "sustainable village planning"]
   },
   "/soil": {
     key: "soil",
@@ -137,14 +159,31 @@ const pageMetaMap = {
     title: "Search & Filter",
     eyebrow: "Explore Village Data",
     description:
-      "Search, filter, and compare village records through responsive tables and drill-down views."
+      "Search, filter, and compare village records through responsive tables and drill-down views.",
+    seoDescription:
+      "Search Indian states, capitals, villages, and featured places with smart village records, live map access, environmental signals, and governance modules.",
+    keywords: [
+      "search village data",
+      "Indian state capital data",
+      "village search platform",
+      "real time place search",
+      "smart village records"
+    ]
   },
   "/contact": {
     key: "contact",
     title: "Contact",
     eyebrow: "Engage the Team",
     description:
-      "Connect with the Smart Village programme office for support, coordination, and partnerships."
+      "Connect with the Smart Village programme office for support, coordination, and partnerships.",
+    seoDescription:
+      "Contact the Smart Village programme office and file citizen grievances for public issues such as water, roads, drainage, street lights, and civic services.",
+    keywords: [
+      "citizen grievance system",
+      "village complaint portal",
+      "rural support desk",
+      "public issue reporting"
+    ]
   },
   "/login": {
     key: "login",
@@ -167,10 +206,19 @@ export const getPageMeta = (pathname) => {
       title: "Village Detail",
       eyebrow: "Village Intelligence Record",
       description:
-        "A detailed village view with full analytics, infrastructure data, and growth indicators."
+        "A detailed village view with full analytics, infrastructure data, and growth indicators.",
+      keywords: defaultKeywords.concat([
+        "village profile",
+        "village infrastructure data",
+        "rural service indicators"
+      ])
     };
   }
 
-  return pageMetaMap[pathname] || pageMetaMap["/dashboard"];
-};
+  const meta = pageMetaMap[pathname] || pageMetaMap["/dashboard"];
 
+  return {
+    ...meta,
+    keywords: defaultKeywords.concat(meta.keywords || [])
+  };
+};

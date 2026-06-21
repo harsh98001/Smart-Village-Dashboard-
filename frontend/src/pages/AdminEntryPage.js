@@ -843,10 +843,10 @@ const AdminEntryPage = () => {
         <div key="visualCard" className="premium-card admin-side-card">
           <h3 key="title" className="table-title">Admin visual slot</h3>
           <div key="image" className="admin-image-slot public-image-frame">
-            <img key="visual" src="/images/admin/admin-monitoring.jpg" alt="Admin monitoring visual" className="public-image" onError={(event) => {
+            <img key="visual" src="/images/analytics-reference.webp" alt="Admin monitoring visual" className="public-image" onError={(event) => {
                               event.currentTarget.parentElement?.classList.add("is-missing");
                             }} />
-            <span key="note" className="media-fallback">Add /images/admin/admin-monitoring.jpg</span>
+            <span key="note" className="media-fallback">Admin monitoring visual</span>
           </div>
         </div>
         <div key="tableCard" className="premium-card section-table-card admin-table-card">

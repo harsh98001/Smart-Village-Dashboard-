@@ -41,6 +41,12 @@ html {
   scroll-behavior: smooth;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: "Manrope", sans-serif;
@@ -50,6 +56,7 @@ body {
     linear-gradient(180deg, var(--off-white), var(--bg));
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body[data-theme="dark"] {
@@ -64,11 +71,31 @@ a {
   text-decoration: none;
 }
 
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
 button,
 input,
 select,
 textarea {
   font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+strong,
+label {
+  overflow-wrap: anywhere;
 }
 
 .app-shell {
@@ -998,6 +1025,11 @@ body[data-theme="dark"] .smart-navbar {
   padding: 1rem 0 2rem;
 }
 
+.hero-carousel {
+  position: relative;
+  min-height: 520px;
+}
+
 .hero-slide {
   border-radius: 36px;
   padding: 2.5rem;
@@ -1005,6 +1037,47 @@ body[data-theme="dark"] .smart-navbar {
   grid-template-columns: 1.2fr 0.8fr;
   gap: 2rem;
   min-height: 520px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+  transform: translateY(0);
+}
+
+.hero-carousel-dots {
+  align-items: center;
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.hero-carousel-dot {
+  appearance: none;
+  background: rgba(93, 111, 133, 0.26);
+  border: 0;
+  border-radius: 999px;
+  height: 10px;
+  padding: 0;
+  transition:
+    background 0.2s ease,
+    width 0.2s ease;
+  width: 10px;
+}
+
+.hero-carousel-dot.active {
+  background: linear-gradient(135deg, var(--maroon), var(--sky-deep));
+  width: 32px;
 }
 
 .hero-slide-copy {

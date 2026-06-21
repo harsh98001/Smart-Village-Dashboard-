@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://smart-village-dashboard.onrender.com/sitemap.xml

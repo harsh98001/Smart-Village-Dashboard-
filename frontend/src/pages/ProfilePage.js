@@ -49,10 +49,10 @@ const ProfilePage = () => {
       </div>
       <div key="visual" className="premium-card profile-visual-card">
         <div key="image" className="profile-image-slot public-image-frame">
-          <img key="visual" src="/images/profile/user-profile-visual.jpg" alt="Profile dashboard visual" className="public-image" onError={(event) => {
+          <img key="visual" src="/images/user-profile-visual.jpg" alt="Profile dashboard visual" className="public-image" onError={(event) => {
                           event.currentTarget.parentElement?.classList.add("is-missing");
                         }} />
-          <span key="note" className="media-fallback">Add /images/profile/user-profile-visual.jpg</span>
+          <span key="note" className="media-fallback">User profile dashboard visual</span>
         </div>
       </div>
       <div key="stats" className="stats-grid compact-grid">

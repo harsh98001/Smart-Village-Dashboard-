@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const slides = [
   {
@@ -15,7 +15,7 @@ const slides = [
     text: "Use the landing experience to compare villages, identify strengths, and understand where focused interventions matter most.",
     action: { label: "Explore Villages", to: "/search" },
     imageSrc: "/images/water.png",
-    imageNote: "Add /images/landing/water-soil.jpg"
+    imageNote: "Water and soil intelligence visual"
   },
   {
     eyebrow: "Inclusive Development",
@@ -23,58 +23,27 @@ const slides = [
     text: "Present a government-grade digital platform that feels credible, responsive, and ready for real decision-making.",
     action: { label: "View Reports", to: "/reports" },
     imageSrc: "/images/article2.png",
-    imageNote: "Add /images/landing/inclusive-development.jpg"
+    imageNote: "Inclusive rural development visual"
   }
 ];
 
 const HeroCarousel = () => {
-  const carouselRef = useRef(null);
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    let node = null;
-    let disposed = false;
+    const intervalId = window.setInterval(() => {
+      setActiveSlideIndex((currentIndex) => (currentIndex + 1) % slides.length);
+    }, 5200);
 
-    const initCarousel = async () => {
-      if (!window.jQuery?.fn?.owlCarousel) {
-        await import("owl.carousel");
-      }
-
-      if (disposed || !carouselRef.current || !window.jQuery?.fn?.owlCarousel) {
-        return;
-      }
-
-      node = window.$(carouselRef.current);
-
-      if (!node.data("owl.carousel")) {
-        node.owlCarousel({
-          items: 1,
-          loop: true,
-          nav: false,
-          dots: true,
-          autoplay: true,
-          autoplayTimeout: 4200,
-          smartSpeed: 950
-        });
-      }
-    };
-
-    initCarousel();
-
-    return () => {
-      disposed = true;
-
-      if (node && node.data("owl.carousel")) {
-        node.trigger("destroy.owl.carousel");
-      }
-    };
+    return () => window.clearInterval(intervalId);
   }, []);
 
   return <section className="hero-carousel-section">
   <div key="container" className="container">
-    <div key="carousel" className="owl-carousel hero-carousel" ref={carouselRef}>
-      {slides.map((slide) =>
-                <div key={slide.title} className="hero-slide">
+    <div key="carousel" className="hero-carousel">
+      {slides.map((slide, index) =>
+                <div key={slide.title} className={`hero-slide${index === activeSlideIndex ? " active" : ""}`} aria-hidden={index !== activeSlideIndex}>
         <div key="content" className="hero-slide-copy">
           <span key="eyebrow" className="section-eyebrow">
             {slide.eyebrow}
@@ -103,6 +72,11 @@ const HeroCarousel = () => {
         </div>
       </div>
               )}
+    </div>
+    <div key="dots" className="hero-carousel-dots" aria-label="Hero slides">
+      {slides.map((slide, index) =>
+              <button key={slide.title} type="button" className={`hero-carousel-dot${index === activeSlideIndex ? " active" : ""}`} aria-label={`Show slide ${index + 1}: ${slide.eyebrow}`} onClick={() => setActiveSlideIndex(index)} />
+            )}
     </div>
   </div>
 </section>;

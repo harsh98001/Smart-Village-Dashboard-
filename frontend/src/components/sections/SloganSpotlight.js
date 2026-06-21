@@ -23,7 +23,7 @@ const SloganSpotlight = () =>
         <img key="visual" src="/images/cartoon.png" alt="Smart village slogan visual" className="public-image" onError={(event) => {
                       event.currentTarget.parentElement?.classList.add("is-missing");
                     }} />
-        <span key="note" className="media-fallback">Add /images/landing/smart-slogan.jpg</span>
+        <span key="note" className="media-fallback">Smart village mission visual</span>
       </div>
     </div>
   </div>

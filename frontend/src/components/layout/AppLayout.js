@@ -3,6 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import NotificationRibbon from "./NotificationRibbon";
 import AuthModal from "./AuthModal";
+import SeoMeta from "./SeoMeta";
 import AssistantWidget from "../ui/AssistantWidget";
 import ToastStack from "../ui/ToastStack";
 import LoadingScreen from "../ui/LoadingScreen";
@@ -14,6 +15,7 @@ const AppLayout = ({ children }) => {
   useGlobalParallax();
 
   return <div className="app-shell">
+  <SeoMeta key="seo" />
   <div key="parallaxBg" className="app-parallax-background" aria-hidden="true">
     <div key="grid" className="app-parallax-grid" />
     <div key="orbSky" className="app-parallax-orb orb-sky" />

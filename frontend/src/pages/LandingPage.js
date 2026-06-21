@@ -69,7 +69,7 @@ const LandingPage = () => {
             <img key="image" src="/images/data.png" alt="Landing mission banner" className="public-image image-banner-image" onError={(event) => {
                               event.currentTarget.parentElement?.classList.add("is-missing");
                             }} />
-            <span key="note" className="media-fallback">Add /images/landing/full-width-banner.jpg</span>
+            <span key="note" className="media-fallback">Rural governance mission visual</span>
           </div>
           <div key="chip-1" className="image-banner-floating-chip chip-water">
             <strong key="value">58%</strong>
