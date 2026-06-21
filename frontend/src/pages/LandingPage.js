@@ -66,7 +66,7 @@ const LandingPage = () => {
         </div>
         <div key="visual-shell" className="image-banner-visual-shell">
           <div key="placeholder" className="image-banner-placeholder public-image-frame">
-            <img key="image" src="public/images/data.png" alt="Landing mission banner" className="public-image image-banner-image" onError={(event) => {
+            <img key="image" src="/images/data.png" alt="Landing mission banner" className="public-image image-banner-image" onError={(event) => {
                               event.currentTarget.parentElement?.classList.add("is-missing");
                             }} />
             <span key="note" className="media-fallback">Add /images/landing/full-width-banner.jpg</span>

@@ -236,23 +236,27 @@ const scoreField = (value, query) => {
   return -1;
 };
 
-const buildCatalogRecord = (entry, record, type) => ({
-  id: `${type.toLowerCase().replace(/\s+/g, "-")}-${entry.state}-${record.name}`
-    .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "-"),
-  name: record.name,
-  state: entry.state,
-  capital: entry.capital,
-  type,
-  sourceLabel: "Official India directory",
-  description:
-    type === "State capital"
+const buildCatalogRecord = (entry, record, type) => {
+  const isCapital = type === "State capital";
+
+  return {
+    id: `${type.toLowerCase().replace(/\s+/g, "-")}-${entry.state}-${record.name}`
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-"),
+    name: record.name,
+    state: entry.state,
+    capital: entry.capital,
+    type,
+    sourceLabel: "Official India directory",
+    description: isCapital
       ? `Official capital for ${entry.state} in the India state directory.`
       : `Featured India search location in ${entry.state}.`,
-  searchTags: [entry.state, entry.capital]
-    .concat(entry.aliases || [])
-    .concat(record.aliases || [])
-});
+    searchTags: [entry.state]
+      .concat(isCapital ? [entry.capital] : [])
+      .concat(entry.aliases || [])
+      .concat(record.aliases || [])
+  };
+};
 
 const catalogRecords = indiaStateDirectory
   .flatMap((entry) => {

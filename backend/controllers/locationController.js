@@ -8,13 +8,14 @@ const {
 
 const LIVE_SEARCH_TTL = 1000 * 60 * 30;
 const liveSearchCache = new Map();
+const normalizeText = (value) => String(value || "").trim().toLowerCase();
 
 const dedupeRecords = (records) => {
   const seen = new Map();
 
   records.forEach((record) => {
-    const key = `${String(record.name || "").toLowerCase()}::${String(record.state || "").toLowerCase()}`;
-    if (!seen.has(key) || record.sourceLabel === "Live geocoding") {
+    const key = `${normalizeText(record.name)}::${normalizeText(record.state)}`;
+    if (!seen.has(key) || seen.get(key).sourceLabel === "Live geocoding") {
       seen.set(key, record);
     }
   });
@@ -57,6 +58,32 @@ const fetchLiveResults = async (query) => {
   return results;
 };
 
+const isExactOfficialMatch = (record, query) => {
+  const normalizedQuery = normalizeText(query);
+
+  return (
+    normalizeText(record.name) === normalizedQuery ||
+    normalizeText(record.state) === normalizedQuery ||
+    (record.type === "State capital" && normalizeText(record.capital) === normalizedQuery) ||
+    (record.searchTags || []).some((tag) => normalizeText(tag) === normalizedQuery)
+  );
+};
+
+const filterExactLiveResults = (records, query) => {
+  const normalizedQuery = normalizeText(query);
+
+  return records.filter((record) => {
+    const fields = [
+      record.name,
+      record.state,
+      record.capital,
+      record.district
+    ].concat(record.searchTags || []);
+
+    return fields.some((field) => normalizeText(field) === normalizedQuery);
+  });
+};
+
 const getLocationCatalog = async (_req, res, next) => {
   try {
     res.json({
@@ -93,14 +120,29 @@ const searchLocations = async (req, res, next) => {
     }
 
     try {
+      const exactOfficialMatches = catalogMatches.filter((record) =>
+        isExactOfficialMatch(record, query)
+      );
+
+      if (exactOfficialMatches.length && !state && !type) {
+        res.json({
+          success: true,
+          usedLiveResults: false,
+          source: "official-directory",
+          message: "Showing exact official India state, capital, and featured-place data.",
+          results: exactOfficialMatches.slice(0, limit)
+        });
+        return;
+      }
+
       const liveResults = await fetchLiveResults(query);
-      const filteredLiveResults = liveResults.filter((record) => {
+      const filteredLiveResults = filterExactLiveResults(liveResults, query).filter((record) => {
         const matchesState = !state || record.state === state;
         const matchesType = !type || record.type === type;
         return matchesState && matchesType;
       });
 
-      const results = dedupeRecords(filteredLiveResults.concat(catalogMatches)).slice(0, limit);
+      const results = dedupeRecords(catalogMatches.concat(filteredLiveResults)).slice(0, limit);
 
       res.json({
         success: true,

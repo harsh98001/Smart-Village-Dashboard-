@@ -6,7 +6,7 @@ const slides = [
     title: "Accelerating rural prosperity through data-led farming systems",
     text: "Track crops, irrigation, renewable energy, and village service performance from a single premium command center.",
     action: { label: "Open Dashboard", to: "/dashboard" },
-    imageSrc: "public/images/article.png",
+    imageSrc: "/images/article.png",
     imageNote: ""
   },
   {
@@ -14,7 +14,7 @@ const slides = [
     title: "Watch natural resources with a modern governance lens",
     text: "Use the landing experience to compare villages, identify strengths, and understand where focused interventions matter most.",
     action: { label: "Explore Villages", to: "/search" },
-    imageSrc: "public/images/water.png",
+    imageSrc: "/images/water.png",
     imageNote: "Add /images/landing/water-soil.jpg"
   },
   {
@@ -22,7 +22,7 @@ const slides = [
     title: "Bring education, health, energy, and infrastructure into one narrative",
     text: "Present a government-grade digital platform that feels credible, responsive, and ready for real decision-making.",
     action: { label: "View Reports", to: "/reports" },
-    imageSrc: "public/images/article2.png",
+    imageSrc: "/images/article2.png",
     imageNote: "Add /images/landing/inclusive-development.jpg"
   }
 ];
